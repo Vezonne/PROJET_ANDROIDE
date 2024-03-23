@@ -1,0 +1,106 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+
+
+
+
+\title{Outil d'appariement pour l'attribution des projets Androide}
+
+
+
+\author{
+  Perotti-Valle Rayan \\
+  \and
+  Savarit Felix \\
+  \and
+  Thomasson Malo
+}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\newpage
+
+\renewcommand{\contentsname}{Sommaire} % Change the name of the table of contents
+
+\tableofcontents{} % Sommaire
+
+\newpage
+
+\section{Définition du problème}
+Ce projet à pour but de recuperer les preferences des etudiants pour leur choix des projets Androide dans le cadre de leur UE de projet.
+Dans un premier temps nous récolterons tous les choix des étudiants et professeurs à l'aide d'une interface web liée à une base de données. Cela nous donnera une liste. 
+Dans un second temps nous utiliserons un programme linéaire sur les listes de preferences des étudiants et professeurs pour maximiser le nombre d'étudiants affectés à un projet tout en maximisant la somme des \textbf{scores} des etudiants et des \textbf{scores} des encadrants. On appelle le \textbf{score} d'un etudiant (resp encadrant) la position de son projet (resp groupe) dans sa liste de preferences, le projet (resp groupe) preferé d'un étudiant (resp encadrant) est n avec n son nombre de projet (resp groupe) dans sa liste de préférence. Son dernier projet (resp groupe) préféré a donc un score de 1.
+
+\section{Objectifs}
+
+
+\subsection{Methode de résolution}
+
+
+\textbf{Programme mathematiques :}
+
+Variables : \[ x_{eP} \] 
+\[ x_{GP} \]
+\begin{itemize}
+\item P projet
+\item G groupe
+\item e étudiant
+\item k nombre cible d'étudiants affectés
+\item score(G,P) : la somme du score pondérée des étudiants du groupe G et du score de l'enseignant du projet P.  
+\end{itemize}
+
+Maximiser la somme de tous les scores :
+
+\[ \text{Maximiser} \sum_{G} \sum_{P} x_{GP} \cdot \text{score}(G, P) \]
+
+\textbf{Contraintes :}
+
+1. Il faut au moins k étudiant affectés à un projet : 
+
+\[ \sum_{e} \sum_{P} x_{eP} \geq k \]
+
+3. Chaque groupe d'étudiants est affecté à au plus un projet :
+
+\[ \quad \forall G \sum_{P} x_{GP} \leq 1 \]
+
+4. Chaque projet doit etre affecté à au plus 1 groupe : 
+
+\[\quad \forall P \sum_{G} x_{GP} \leq 1 \]
+
+5. un étudiant ne doit pas avoir plusieurs projet : 
+
+\[\quad \forall P, \forall e \in G, x_{GP} = x_{eP} \]
+
+6. Contrainte de stabilité 
+
+\vspace{1em}
+
+Il ne faut pas qu'un groupe A soit disponible ou la majorité de A ne préfére pas le projet P qui leur 
+a été attribué et que la majorité de A soit individuellement préféré dans un autre projet qu'il 
+prefere à P par leur encadrant respectifs ou que ces projets soit disponibles et que les groupes avec 
+lesquels ils ont postulés préférent ces projets auxquels ils ont été attribué ou que ces groupes soit 
+disponibles
+
+\vspace{1em}
+
+7. Les variables de décision sont binaires :
+
+\[ x_{eP} \in \{0, 1\} \]
+\[ x_{GP} \in \{0, 1\} \]
+
+\subsection{Outils de recueil des voeux etudiants/encadrants}
+
+On developpera une interface web en javascript/html/CSS qui aura un coté recueil des voeux étudiant et un coté recueil des voeux encadrant.
+Le but étant de recueillir les preferences de chacun dans une base de données. Une fois les données recuperées on fait tourner l'algo dessus en local.
+On pourra si necessaire ajouter des fonctionnalités supplementaires comme le depot de CV ou lettre de motivation sur demande des encadrants.
+
+
+\section{Délais}
+
+Semaine du 20 Mai
+
+\end{document}
