@@ -1,13 +1,12 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{calc}
 
-
-
-
-\title{Outil d'appariement pour l'attribution des projets Androide}
-
-
+\title{\huge Outil d'appariement pour l'attribution des projets Androide}
 
 \author{
   Perotti-Valle Rayan \\
@@ -16,11 +15,21 @@
   \and
   Thomasson Malo
 }
-\date{\today}
+
+\date{}
 
 \begin{document}
 
 \maketitle
+
+{\centering\bfseries\large Cahier des charges\par}
+
+\vfill
+\begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=south east, inner sep=0pt] at ($(current page.south east) + (-2cm, 2cm)$) {\includegraphics[height=2cm]{Logo sorbonne.png}};
+    \node[anchor=south west, inner sep=0pt] at ($(current page.south west) + (2cm, 3cm)$) {\textbf{Olivier Spanjaard}, 2024};
+\end{tikzpicture}
+
 
 \newpage
 
