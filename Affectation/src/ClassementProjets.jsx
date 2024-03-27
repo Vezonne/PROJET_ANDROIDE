@@ -76,7 +76,7 @@ function ClassementProjets() {
                 </td>
                 <td>
                 <button
-                    className="arrow-button"
+                    className="arrow-button" 
                     onClick={() => toggleInformationsSupplementaires(projet.id)}
                 >
                     {projetsEtendus[projet.id] ? '↑' : '↓'}
