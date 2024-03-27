@@ -25,7 +25,7 @@ function ClassementProjets() {
   ];
 
   const [projetsEtendus, setProjetsEtendus] = useState({});
-  const [projetsPositionnes, setProjetsPositionnes] = useState([]);
+  const [projetsSelectionnes, setProjetsSelectionnes] = useState([]);
 
   // Fonction de gestion du clic sur la flèche déroulante pour afficher les informations supplémentaires
   const toggleInformationsSupplementaires = (projetId) => {
@@ -35,19 +35,21 @@ function ClassementProjets() {
     });
   };
 
-  const handleClick = (projetId) => {
-    
-    const confirmation = window.confirm(`Êtes-vous sûr de vouloir vous positionner sur le projet "${projets[projetId-1].nom}" ?`)
-    if (confirmation) {
-      setProjetsPositionnes([...projetsPositionnes,projetId]);
-      console.log("Vous vous êtes positionné sur le projet avec l'ID :", projetId);
+  const addProject = (projetId) => {
+
+    if(!projetsSelectionnes.find(projet => projet.id === projetId)){
+      const confirmation = window.confirm(`Êtes-vous sûr de vouloir vous ajouter ce projet "${projets[projetId-1].nom}" ?`)
+      if (confirmation) {
+        setProjetsSelectionnes([...projetsSelectionnes,projetId]);
+        console.log("Vous vous êtes positionné sur le projet avec l'ID :", projetId);
+      }
     }
     
   };
 
   useEffect(() => {
-    console.log("Valeur actuelle de projetsPositionnes :", projetsPositionnes);
-  }, [projetsPositionnes]);
+    console.log("Valeur actuelle de projetsPositionnes :", projetsSelectionnes);
+  }, [projetsSelectionnes]);
 
   return (
     <div className='classement-projets-container'>
@@ -70,8 +72,8 @@ function ClassementProjets() {
                 <td>{projet.capacite}</td>
                 <td>{projet.description}</td>
                 <td>
-                <button className='positionnement-button' onClick={() => handleClick(projet.id)} disabled={projetsPositionnes.includes(projet.id)}>
-                    Se positionner dans ce projet
+                <button className='add-button' onClick={() => addProject(projet.id)} disabled={projetsSelectionnes.some(p => p.id === projet.id)}>
+                    +
                 </button>
                 </td>
                 <td>
