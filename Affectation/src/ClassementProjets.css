@@ -1,58 +1,95 @@
-/* ClassementProjets.css */
-
 .classement-projets-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .projets-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .projets-table th,
-  .projets-table td {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .projets-table th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-    text-align: left;
-  }
-  
-  .projets-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .projets-table tbody tr:hover {
-    background-color: #f2f2f2;
-  }
+  font-family: Arial, sans-serif;
+  text-align: center; 
+}
 
-  
-  .positionnement-button {
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .add-button:hover {
-    background-color: #0056b3;
-  }
+.projets-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid #ccc; 
+}
+
+.projets-table th, .projets-table td {
+  padding: 10px;
+  border-right: 1px solid #ddd; 
+}
+
+.projets-table th {
+  background-color: #ebebeb;
+  text-align: left;
+}
+
+.add-button, .arrow-button, .supp-button {
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.add-button {
+  background-color: #66b3ff;
+  color: white;
+  border: none;
+}
+
+.add-button:hover {
+  background-color: #3385ff;
+}
+
+.arrow-button, .supp-button {
+  background-color: transparent; 
+  color: black; 
+  border: none;
+}
+
+.arrow-button:hover {
+  background-color: #f2f2f2; 
+}
+
+.supp-button:hover {
+  background-color: #ff6666; 
+  color: white;
+}
+
+.projet-select {
+  padding: 6px;
+  margin-left: 12px;
+  border-radius: 4px;
+}
+
+.informations-supplementaires {
+  background-color: #ebebeb; /* Couleur de fond plus sombre */
+  color: black; /* Couleur de texte blanc */
+  padding: 10px;
+  border-radius: 12px; /* Coins arrondis */
+  margin-top: 10px;
+}
+
+.selection {
+  margin-top: 20px;
+}
+
+.selection h2 {
+  font-size: 20px;
+  margin-bottom: 12px;
+  margin-top: 0; /* Réduire l'espace au-dessus du titre */
+}
+
+.selection ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.selection li {
+  margin-bottom: 8px; /* Réduire l'espace entre les éléments de la liste */
+  border-radius: 4px;
+  background-color: #ebebeb;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+}
 
 
-  .arrow-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .informations-supplementaires {
-    background-color: #f9f9f9;
-    padding: 10px;
-  }
+.selection li button {
+  margin-left: auto;
+}
