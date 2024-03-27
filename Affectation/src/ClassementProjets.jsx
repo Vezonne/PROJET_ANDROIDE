@@ -75,7 +75,7 @@ function ClassementProjets() {
                 <button className='add-button' onClick={() => addProject(projet.id)} disabled={projetsSelectionnes.some(p => p.id === projet.id)}>
                     +
                 </button>
-                </td>
+                </td> 
                 <td>
                 <button
                     className="arrow-button"
