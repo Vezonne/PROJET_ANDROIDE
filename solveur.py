@@ -21,6 +21,12 @@ model.P = Set()
 
 # Somme du score du groupe G et de l'enseignant du projet P
 model.score = Param(model.P, model.G, within=NonNegativeReals)
+# Appartenance d'un étudiant à un groupe
+model.appartenance = Param(model.E, model.G, within=Binary)
+# Nombre d'étudiants dans un groupe
+model.nb_etu = Param(model.G, within=NonNegativeIntegers)
+# Candidature d'un groupe à un projet
+model.candidature = Param(model.G, model.P, within=Binary)
 
 ########## VARIABLES ##########
 
