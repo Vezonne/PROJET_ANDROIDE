@@ -1,6 +1,7 @@
 import React from 'react';
 import './ClassementProjets.css'
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 function ClassementProjets() {
   // Exemple de projet en attendant le backend
@@ -11,7 +12,17 @@ function ClassementProjets() {
         capacite: "2-4",
         nom: "Projet 1",
         description: "Description du projet 1",
-        informationsSupplementaires: "Informations supplémentaires pour le projet 1"
+        informationsSupplementaires: "Informations supplémentaires pour le projet 1",
+        candidats: [
+          {
+            nom: "Nom du candidat",
+            prenom: "Prénom du candidat",
+            email: "email@example.com",
+            numEtudiant: "Numéro étudiant",
+            cv: "", // Chemin vers le CV du candidat
+            lettreMotivation: "" // Chemin vers la lettre de motivation du candidat
+          }
+        ]
       },
       {
         id: 2,
@@ -19,7 +30,17 @@ function ClassementProjets() {
         capacite: "2",
         nom: "Projet 2",
         description: "Description du projet 2",
-        informationsSupplementaires: "Informations supplémentaires pour le projet 2"
+        informationsSupplementaires: "Informations supplémentaires pour le projet 2",
+        candidats: [
+          {
+            nom: "Nom du candidat",
+            prenom: "Prénom du candidat",
+            email: "email@example.com",
+            numEtudiant: "Numéro étudiant",
+            cv: "", // Chemin vers le CV du candidat
+            lettreMotivation: "" // Chemin vers la lettre de motivation du candidat
+          }
+        ]
       },
       {
         id: 3,
@@ -27,7 +48,17 @@ function ClassementProjets() {
         capacite: "2",
         nom: "Projet 3",
         description: "Description du projet 2",
-        informationsSupplementaires: "Informations supplémentaires pour le projet 2"
+        informationsSupplementaires: "Informations supplémentaires pour le projet 2",
+        candidats: [
+          {
+            nom: "Nom du candidat",
+            prenom: "Prénom du candidat",
+            email: "email@example.com",
+            numEtudiant: "Numéro étudiant",
+            cv: "", // Chemin vers le CV du candidat
+            lettreMotivation: "" // Chemin vers la lettre de motivation du candidat
+          }
+        ]
       },
       {
         id: 4,
@@ -35,7 +66,17 @@ function ClassementProjets() {
         capacite: "2",
         nom: "Projet 4",
         description: "Description du projet 2",
-        informationsSupplementaires: "Informations supplémentaires pour le projet 2"
+        informationsSupplementaires: "Informations supplémentaires pour le projet 2",
+        candidats: [
+          {
+            nom: "Nom du candidat",
+            prenom: "Prénom du candidat",
+            email: "email@example.com",
+            numEtudiant: "Numéro étudiant",
+            cv: "", // Chemin vers le CV du candidat
+            lettreMotivation: "" // Chemin vers la lettre de motivation du candidat
+          }
+        ]
       },
       {
         id: 5,
@@ -43,7 +84,17 @@ function ClassementProjets() {
         capacite: "2-4",
         nom: "Projet 1",
         description: "Description du projet 1",
-        informationsSupplementaires: "Informations supplémentaires pour le projet 1"
+        informationsSupplementaires: "Informations supplémentaires pour le projet 1",
+        candidats: [
+          {
+            nom: "Nom du candidat",
+            prenom: "Prénom du candidat",
+            email: "email@example.com",
+            numEtudiant: "Numéro étudiant",
+            cv: "", // Chemin vers le CV du candidat
+            lettreMotivation: "" // Chemin vers la lettre de motivation du candidat
+          }
+        ]
       },
       {
         id: 6,
@@ -51,7 +102,17 @@ function ClassementProjets() {
         capacite: "2",
         nom: "Projet 2",
         description: "Description du projet 2",
-        informationsSupplementaires: "Informations supplémentaires pour le projet 2"
+        informationsSupplementaires: "Informations supplémentaires pour le projet 2",
+        candidats: [
+          {
+            nom: "Nom du candidat",
+            prenom: "Prénom du candidat",
+            email: "email@example.com",
+            numEtudiant: "Numéro étudiant",
+            cv: "", // Chemin vers le CV du candidat
+            lettreMotivation: "" // Chemin vers la lettre de motivation du candidat
+          }
+        ]
       },
       {
         id: 7,
@@ -59,7 +120,17 @@ function ClassementProjets() {
         capacite: "2",
         nom: "Projet 3",
         description: "Description du projet 2",
-        informationsSupplementaires: "Informations supplémentaires pour le projet 2"
+        informationsSupplementaires: "Informations supplémentaires pour le projet 2",
+        candidats: [
+          {
+            nom: "Nom du candidat",
+            prenom: "Prénom du candidat",
+            email: "email@example.com",
+            numEtudiant: "Numéro étudiant",
+            cv: "", // Chemin vers le CV du candidat
+            lettreMotivation: "" // Chemin vers la lettre de motivation du candidat
+          }
+        ]
       },
       {
         id: 8,
@@ -67,7 +138,17 @@ function ClassementProjets() {
         capacite: "2",
         nom: "Projet 4",
         description: "Description du projet 2",
-        informationsSupplementaires: "Informations supplémentaires pour le projet 2"
+        informationsSupplementaires: "Informations supplémentaires pour le projet 2",
+        candidats: [
+          {
+            nom: "Nom du candidat",
+            prenom: "Prénom du candidat",
+            email: "email@example.com",
+            numEtudiant: "Numéro étudiant",
+            cv: "", // Chemin vers le CV du candidat
+            lettreMotivation: "" // Chemin vers la lettre de motivation du candidat
+          }
+        ]
       },
 
   ];
@@ -197,6 +278,14 @@ function ClassementProjets() {
             </li>
             ))}
           </ul>
+        </div>
+        <div className='suivant-container'>
+          <Link to={{
+            pathname: "/infoSupp",
+            state: { projetsSelectionnes: projetsSelectionnes }
+          }}>
+            <button className='suivant-button'>étape suivante</button>
+          </Link>
         </div>
     </div>
   );

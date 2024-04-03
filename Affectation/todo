@@ -1,0 +1,11 @@
+-page suivante où on renseigne les coordonnés et adresse email qu'on recupere dans une liste deroulante
+-ça envoie un mail aux etudiants avec qui on candidate
+
+-il faut que les candidats soient sous la forme d'une liste de groupe associé à un projet, en attente d'etre accepté
+-Un groupe contient n (capacité du projet rentré dans ClassementProjets.jsx) etudiant
+-Un etudiant est caracterisé par sous nom, prenom, email, numEtu
+-Il faut un formulaire unique ou onn rempli nos infos (celles d'un etudiant)
+-ensuite des infos supplementaires pour chaque projet auxquel on a candidaté dans la page ClassementProjet.jsx
+-On remplira les infos supplementaires plus tard 
+
+-Page des encadrants où ils rentrent leurs projets et descriptif

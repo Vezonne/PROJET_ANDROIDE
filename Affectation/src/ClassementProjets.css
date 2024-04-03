@@ -1,29 +1,29 @@
 .classement-projets-container {
-  font-family: Arial, sans-serif;
+  font-family: Arial, sans-serif; /* Police de caractères */
   text-align: center; 
 }
 
 .projets-table {
-  width: 100%;
-  border-collapse: collapse;
-  border: 2px solid #ccc; 
+  width: 100%; 
+  border-collapse: collapse; 
+  border: 2px solid #ccc;  
 }
 
 .projets-table th, .projets-table td {
-  padding: 10px;
-  border-right: 1px solid #ddd; 
+  padding: 10px; 
+  border-right: 1px solid #ddd;  
 }
 
 .projets-table th {
-  background-color: #ebebeb;
-  text-align: left;
+  background-color: #ebebeb; 
+  text-align: left; 
 }
 
-.add-button, .arrow-button, .supp-button {
+.add-button, .arrow-button, .supp-button{
   padding: 8px 16px;
   cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s;
+  border-radius: 4px; /* Coins arrondis */
+  transition: background-color 0.3s; /* Transition legere pour l'effet hover */
 }
 
 .add-button {
@@ -32,14 +32,15 @@
   border: none;
 }
 
-.add-button:hover {
-  background-color: #3385ff;
-}
 
 .arrow-button, .supp-button {
   background-color: transparent; 
   color: black; 
   border: none;
+}
+
+.add-button:hover {
+  background-color: #3385ff;
 }
 
 .arrow-button:hover {
@@ -50,6 +51,7 @@
   background-color: #ff6666; 
   color: white;
 }
+
 
 .projet-select {
   padding: 6px;
@@ -85,11 +87,32 @@
   border-radius: 4px;
   background-color: #ebebeb;
   padding: 12px;
-  display: flex;
-  align-items: center;
+  display: flex; /* Aligner les éléments horizontalement */
+  align-items: center;  
 }
 
 
 .selection li button {
-  margin-left: auto;
+  margin-left: auto; /* Aligner le bouton à droite */
+}
+
+
+.suivant-container {
+  display: flex;
+  justify-content: flex-end; /* Aligne le contenu à l'extrémité droite */
+}
+
+.suivant-button {
+  background-color: #008a00;
+  color: white;
+  border: none;
+  padding: 10px 20px; /* Ajuster le padding pour le dimensionnement */
+  font-size: 16px; /* Taille du texte */
+  border-radius: 5px; /* Coins arrondis */
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Transition legere pour l'effet hover */
+}
+
+.suivant-button:hover {
+  background-color: #006300;
 }
