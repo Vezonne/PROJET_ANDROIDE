@@ -1,7 +1,8 @@
 import React from 'react';
-import './ClassementProjets.css'
+import './ClassementProjets.css';
+import InfoSupp from './InfoSupp';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate  } from 'react-router-dom';
 
 function ClassementProjets() {
   // Exemple de projet en attendant le backend
@@ -157,6 +158,7 @@ function ClassementProjets() {
   const [projetsEtendus, setProjetsEtendus] = useState({});
   const [projetsSelectionnes, setProjetsSelectionnes] = useState([]);
   const [scores, setScores] = useState({});
+  const navigate = useNavigate();
 
   // Fonction de gestion du clic sur la flèche déroulante pour afficher les informations supplémentaires
   const toggleInformationsSupplementaires = (projetId) => {
@@ -207,6 +209,10 @@ function ClassementProjets() {
     setScores(newScores); 
 
 
+  };
+
+  const handleClick = () => {
+    navigate('/infoSupp', {state: {projetsSelectionnes : projetsSelectionnes}});
   };
 
   useEffect(() => {
@@ -280,12 +286,7 @@ function ClassementProjets() {
           </ul>
         </div>
         <div className='suivant-container'>
-          <Link to={{
-            pathname: "/infoSupp",
-            state: { projetsSelectionnes: projetsSelectionnes }
-          }}>
-            <button className='suivant-button'>étape suivante</button>
-          </Link>
+            <button className='suivant-button' onClick={handleClick}>étape suivante</button>
         </div>
     </div>
   );
