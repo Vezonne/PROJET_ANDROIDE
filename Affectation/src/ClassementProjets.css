@@ -1,12 +1,37 @@
-.classement-projets-container {
-  font-family: Arial, sans-serif; /* Police de caractères */
-  text-align: center; 
+.outlet-toolbar-container {
+  display: flex; /* Aligner horizontalement */
+
 }
 
+.button-projet-container {
+  display: flex; /* Utilisation de flexbox pour aligner les éléments */
+  flex-direction: column; /* Aligner les éléments en colonne */
+  width: 66%; /* Largeur maximale de 30% de la fenêtre */
+  min-width: 200px; /* Largeur minimale pour éviter une trop petite toolbar */
+  height: 100%;
+}
+
+
 .projets-table {
-  width: 100%; 
-  border-collapse: collapse; 
-  border: 2px solid #ccc;  
+  width: 100%; /* Pour occuper toute la largeur du parent */
+  height: 100%;
+  border-collapse: collapse; /* Fusionner les bordures des cellules */
+  margin-top: 20px; /* Espacement entre les boutons et la table */
+}
+
+.projet-container {
+  display: flex; /* Utilisation de flexbox pour aligner les éléments */
+  flex-direction: column; /* Aligner les éléments en colonne */
+  align-items: center; /* Centrer horizontalement les éléments */
+  width: 100%; /* Pour occuper toute la largeur du parent */
+  
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%; /* Pour occuper toute la largeur du parent */
+  margin-top: 20px; /* Espacement entre la table et les boutons */
 }
 
 .projets-table th, .projets-table td {
@@ -32,11 +57,15 @@
   border: none;
 }
 
-
 .arrow-button, .supp-button {
   background-color: transparent; 
   color: black; 
   border: none;
+}
+
+.add-button:disabled {
+  opacity: 0.5; 
+  pointer-events: none;
 }
 
 .add-button:hover {
@@ -47,17 +76,6 @@
   background-color: #f2f2f2; 
 }
 
-.supp-button:hover {
-  background-color: #ff6666; 
-  color: white;
-}
-
-
-.projet-select {
-  padding: 6px;
-  margin-left: 12px;
-  border-radius: 4px;
-}
 
 .informations-supplementaires {
   background-color: #ebebeb; /* Couleur de fond plus sombre */
@@ -67,40 +85,6 @@
   margin-top: 10px;
 }
 
-.selection {
-  margin-top: 20px;
-}
-
-.selection h2 {
-  font-size: 20px;
-  margin-bottom: 12px;
-  margin-top: 0; /* Réduire l'espace au-dessus du titre */
-}
-
-.selection ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.selection li {
-  margin-bottom: 8px; /* Réduire l'espace entre les éléments de la liste */
-  border-radius: 4px;
-  background-color: #ebebeb;
-  padding: 12px;
-  display: flex; /* Aligner les éléments horizontalement */
-  align-items: center;  
-}
-
-
-.selection li button {
-  margin-left: auto; /* Aligner le bouton à droite */
-}
-
-
-.suivant-container {
-  display: flex;
-  justify-content: flex-end; /* Aligne le contenu à l'extrémité droite */
-}
 
 .suivant-button {
   background-color: #008a00;
@@ -113,6 +97,23 @@
   transition: background-color 0.3s ease; /* Transition legere pour l'effet hover */
 }
 
+.retour-button {
+  background-color: #212121;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: auto; /* Ajout de cette propriété pour aligner le bouton à gauche */
+}
+
 .suivant-button:hover {
   background-color: #006300;
 }
+
+.retour-button:hover {
+  background-color: #000000;
+}
+

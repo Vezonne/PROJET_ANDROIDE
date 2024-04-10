@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate   } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import './InfoSupp.css';
 
 const InfoSupp = () => {
 
-    const navigate = useNavigate();
-    const location = useLocation();
-    const { projetsSelectionnes } = location.state;
+    const [projetsSelectionnes, setProjetsSelectionnes] = useState([]);
 
-    if (!projetsSelectionnes) {
-        navigate('/classementProjets'); 
-        return null; 
+    useEffect(() => {
+      console.log("Valeur actuelle de projetsSelectionnes :", projetsSelectionnes);
+    }, [projetsSelectionnes]);
+
+    useEffect(() => {
+      const panierLocalStorage = localStorage.getItem("projetsSelectionnes");
+      if (panierLocalStorage) {
+        setProjetsSelectionnes(JSON.parse(panierLocalStorage));
+      }
     }
+    , []);
+
 
     
 
