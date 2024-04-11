@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import './Toolbar.css';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 
-const Toolbar = () => {
+const Toolbar = ({count, modifierVal}) => {
 
     const [projetsSelectionnes, setProjetsSelectionnes] = useState([]);
     const [scores, setScores] = useState({});
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const cpt = count;
 
     const handleScoreChange = (projetId, score) => {
         //parcourir les projets sélectionnés et supprimer le score si le score est le même
@@ -24,8 +29,6 @@ const Toolbar = () => {
         });
     };
 
-    
-
     const handleRemoveProject = (projetId) => {
         const updatedProjetsSelectionnes  = projetsSelectionnes.filter(projet => projet.id !== projetId);
         setProjetsSelectionnes(updatedProjetsSelectionnes );
@@ -35,7 +38,16 @@ const Toolbar = () => {
         delete nouveauxScores[projetId];
         setScores(nouveauxScores);
 
+        localStorage.setItem('scores', JSON.stringify(nouveauxScores));
         localStorage.setItem('projetsSelectionnes', JSON.stringify(updatedProjetsSelectionnes ));
+
+        // window.location.reload();
+        
+        if(location.pathname !== "/classementProjets"){
+          navigate(`/infoSupp/${projetsSelectionnes[0].id}`);
+        }
+        modifierVal(cpt - 1);
+
 
     };
 
@@ -45,35 +57,60 @@ const Toolbar = () => {
             setProjetsSelectionnes(JSON.parse(panierLocalStorage));
         }
     }
-    , []);
+    , [cpt]);
 
     useEffect(() => {
-        console.log("Valeur actuelle de projetsSelectionnes :", projetsSelectionnes);
+      const scoresLocalStorage = localStorage.getItem('scores');
+      if (scoresLocalStorage) {
+        setScores(JSON.parse(scoresLocalStorage));
+      }
+    }, [cpt]);
+    
+
+    useEffect(() => {
+      console.log("Valeur actuelle de projetsSelectionnes :", projetsSelectionnes);
     }
     , [projetsSelectionnes]);
 
     useEffect(() => {
-        console.log("Valeur actuelle de scores :", scores);
-    }
-    , [scores]);
+      localStorage.setItem('scores', JSON.stringify(scores));
+      console.log("scores :", scores);
+      console.log("localStorage.getItem('scores') :", localStorage.getItem('scores'));
+    }, [scores]);
     
     return (
         <div className='selection-toolbar'>
           <h2>Projets Sélectionnés</h2>
-          <ul className='toolbar-list'>
-            {projetsSelectionnes.map(projet => (
-              <li key={projet.id} className='toolbar-item'>
-                {projet.nom} - Score :
-                <select className='projet-select' value={scores[projet.id] || ''} onChange={(e) => handleScoreChange(projet.id, e.target.value)}>
-                  <option value="">Sélectionnez un score</option>
-                  {Array.from({ length: projetsSelectionnes.length }, (_, i) => i + 1).map(score => (
-                    <option key={score} value={score}>{score}</option>
-                  ))}
-                </select>
-                <button className='toolbar-button' type="button" onClick={() => handleRemoveProject(projet.id)}>Supprimer</button>
-              </li>
-            ))}
-          </ul>
+            <ul className='toolbar-list'>
+              {projetsSelectionnes.map(projet => (
+                <div>
+                  {projet.submitted ? (
+                  <li key={projet.id} className='toolbar-item-disable'>
+
+                      <span className='link-disable'>
+                      {projet.nom} - Score : {scores[projet.id]}
+                      </span> 
+                      <button className='toolbar-button' type="button" onClick={() => handleRemoveProject(projet.id)}>Supprimer</button>
+
+                </li>
+                ) : (
+                  <li key={projet.id} className='toolbar-item'>
+                      <NavLink className='info-sup-link' to={`/infoSupp/${projet.id}`}>
+                      {projet.nom} - Score :
+                      </NavLink>
+                    
+                      <select className='projet-select' value={scores[projet.id] || ''} onChange={(e) => handleScoreChange(projet.id, e.target.value)}>
+                        <option value="">Sélectionnez un score</option>
+                        {Array.from({ length: projetsSelectionnes.length }, (_, i) => i + 1).map(score => (
+                          <option key={score} value={score}>{score}</option>
+                        ))}
+                      </select>
+                  <button className='toolbar-button' type="button" onClick={() => handleRemoveProject(projet.id)}>Supprimer</button>
+                </li>
+                )}
+                </div>
+              ))}
+            </ul>
         </div>
       );
     }

@@ -38,6 +38,10 @@
   border-bottom: none;
 }
 
+.toolbar-item-disable {
+  background-color: #00a94ff4;
+}
+
 .projet-select {
   margin-left: 10px;
 }
@@ -55,4 +59,14 @@
 
 .toolbar-button:hover {
   background-color: #ff4d4d;
+}
+
+
+.info-sup-link{
+  color: blue; /* Couleur du texte */
+  text-decoration: none; /* Supprimer la soulignement par défaut */
+}
+
+.info-sup-link:hover {
+  color: darkblue;
 }

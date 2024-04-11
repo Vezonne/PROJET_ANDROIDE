@@ -4,16 +4,19 @@ import { useState, useEffect } from 'react';
 import { useNavigate  } from 'react-router-dom';
 import Toolbar from './Toolbar';
 
-function ClassementProjets() {
+const ClassementProjets = () => {
   // Exemple de projet en attendant le backend
   const projets = [
     {
         id: 1,
         responsable: "Prof Shen",
-        capacite: "2-4",
+        capaciteMin: "2",
+        capaciteMax: "4",
         nom: "Projet 1",
         description: "Description du projet 1",
         informationsSupplementaires: "Informations supplémentaires pour le projet 1",
+        submitted : false,
+        score : null,
         candidats: [
           {
             nom: "Nom du candidat",
@@ -28,10 +31,13 @@ function ClassementProjets() {
       {
         id: 2,
         responsable: "Prof Rayan",
-        capacite: "2",
+        capaciteMin: "2",
+        capaciteMax: "2",
         nom: "Projet 2",
         description: "Description du projet 2",
         informationsSupplementaires: "Informations supplémentaires pour le projet 2",
+        submitted : false,
+        score : null,
         candidats: [
           {
             nom: "Nom du candidat",
@@ -46,10 +52,13 @@ function ClassementProjets() {
       {
         id: 3,
         responsable: "Prof george",
-        capacite: "2",
+        capaciteMin: "2",
+        capaciteMax: "2",
         nom: "Projet 3",
         description: "Description du projet 2",
         informationsSupplementaires: "Informations supplémentaires pour le projet 2",
+        submitted : false,
+        score : null,
         candidats: [
           {
             nom: "Nom du candidat",
@@ -64,10 +73,13 @@ function ClassementProjets() {
       {
         id: 4,
         responsable: "Prof alex",
-        capacite: "2",
+        capaciteMin: "2",
+        capaciteMax: "4",
         nom: "Projet 4",
         description: "Description du projet 2",
         informationsSupplementaires: "Informations supplémentaires pour le projet 2",
+        submitted : false,
+        score : null,
         candidats: [
           {
             nom: "Nom du candidat",
@@ -82,10 +94,13 @@ function ClassementProjets() {
       {
         id: 5,
         responsable: "Prof Shen",
-        capacite: "2-4",
-        nom: "Projet 1",
+        capaciteMin: "2",
+        capaciteMax: "2",
+        nom: "Projet 5",
         description: "Description du projet 1",
         informationsSupplementaires: "Informations supplémentaires pour le projet 1",
+        submitted : false,
+        score : null,
         candidats: [
           {
             nom: "Nom du candidat",
@@ -100,10 +115,13 @@ function ClassementProjets() {
       {
         id: 6,
         responsable: "Prof Rayan",
-        capacite: "2",
-        nom: "Projet 2",
+        capaciteMin: "2",
+        capaciteMax: "4",
+        nom: "Projet 6",
         description: "Description du projet 2",
         informationsSupplementaires: "Informations supplémentaires pour le projet 2",
+        submitted : false,
+        score : null,
         candidats: [
           {
             nom: "Nom du candidat",
@@ -118,10 +136,13 @@ function ClassementProjets() {
       {
         id: 7,
         responsable: "Prof george",
-        capacite: "2",
-        nom: "Projet 3",
+        capaciteMin: "2",
+        capaciteMax: "4",
+        nom: "Projet 7",
         description: "Description du projet 2",
         informationsSupplementaires: "Informations supplémentaires pour le projet 2",
+        submitted : false,
+        score : null,
         candidats: [
           {
             nom: "Nom du candidat",
@@ -136,10 +157,13 @@ function ClassementProjets() {
       {
         id: 8,
         responsable: "Prof alex",
-        capacite: "2",
-        nom: "Projet 4",
+        capaciteMin: "4",
+        capaciteMax: "4",
+        nom: "Projet 8",
         description: "Description du projet 2",
         informationsSupplementaires: "Informations supplémentaires pour le projet 2",
+        submitted : false,
+        score : null,
         candidats: [
           {
             nom: "Nom du candidat",
@@ -158,6 +182,16 @@ function ClassementProjets() {
   const [projetsEtendus, setProjetsEtendus] = useState({});
   const [projetsSelectionnes, setProjetsSelectionnes] = useState([]);
   const navigate = useNavigate();
+  const [count, setCount] = useState(0);
+  const [scores, setScores] = useState({});
+
+  useEffect(() => {
+    const scoresLocalStorage = localStorage.getItem('scores');
+    if (scoresLocalStorage) {
+      setScores(JSON.parse(scoresLocalStorage));
+    }
+  }, [count]);
+
 
   // Fonction de gestion du clic sur la flèche déroulante pour afficher les informations supplémentaires
   const toggleInformationsSupplementaires = (projetId) => {
@@ -167,6 +201,9 @@ function ClassementProjets() {
     });
   };
 
+  const modifierCount = (val) => {
+    setCount(val);
+  }
 
   // Fonction de gestion du clic sur le bouton d'ajout d'un projet
   const addProject = (projet) => {
@@ -176,12 +213,23 @@ function ClassementProjets() {
       //const confirmation = window.confirm(`Êtes-vous sûr de vouloir vous ajouter ce projet "${projets[projet.id-1].nom}" ?`)
       //if (confirmation) {
       const updatedProjetsSelectionnes = [...projetsSelectionnes, projet];
-      setProjetsSelectionnes(updatedProjetsSelectionnes);
-      localStorage.setItem('projetsSelectionnes', JSON.stringify(updatedProjetsSelectionnes));
-      console.log("Vous vous êtes positionné sur le projet avec l'ID :", projet.id);
+      const sortedProjetsSelectionnes = updatedProjetsSelectionnes.sort((a, b) => a.id - b.id);
+      
+      const newScores = { ...scores };
+      newScores[projet.id] = ''; // Score vide
+      
+      setProjetsSelectionnes(sortedProjetsSelectionnes);
+      setScores(newScores);
+
+      localStorage.setItem('projetsSelectionnes', JSON.stringify(sortedProjetsSelectionnes));
+      localStorage.setItem('scores', JSON.stringify(newScores));
+      console.log("localStorage.getItem('scores') :", localStorage.getItem('scores'));
       //}
 
-      window.location.reload();
+      // window.location.reload();
+
+      modifierCount(count + 1);
+
     }
   };
 
@@ -190,20 +238,23 @@ function ClassementProjets() {
     if(panierLocal){
       setProjetsSelectionnes(JSON.parse(panierLocal));
     }
-  }, [projetsSelectionnes]);
+  }, [count]);
+
 
 
   const handleClick = () => {
-    navigate('/infoSupp');
+    if(projetsSelectionnes.length === 0){
+      window.alert("Vous devez selectionner au moins un projet pour continuer");
+    }
+      else{
+        navigate(`/infoSupp/${projetsSelectionnes[0].id}`);
+      }
+
   };
 
   const handleclickBack = () => {
     navigate('/');
   };
-
-  useEffect(() => {
-    console.log("Valeur actuelle de projetsSelectionnes :", projetsSelectionnes);
-  }, [projetsSelectionnes]);
 
 
   return (
@@ -226,7 +277,11 @@ function ClassementProjets() {
                       <tr key = {projet.id}>
                           <td>{projet.nom}</td>
                           <td>{projet.responsable}</td>
-                          <td>{projet.capacite}</td>
+                          <td>
+                            {projet.capaciteMax === projet.capaciteMin
+                              ? projet.capaciteMin
+                              : `${projet.capaciteMin}-${projet.capaciteMax}`}
+                          </td>
                           <td>{projet.description}</td>
                           <td>
                           <button className='add-button' onClick={() => addProject(projet)} disabled={projetsSelectionnes.some(p => p.id === projet.id)}>
@@ -259,8 +314,8 @@ function ClassementProjets() {
               <button className='retour-button' onClick={handleclickBack}>Retour</button>
               <button className='suivant-button' onClick={handleClick}>Étape suivante</button>
           </div>
+          <Toolbar count={count} modifierVal = {modifierCount}></Toolbar>
           </div>
-          <Toolbar className='toolbar' ></Toolbar>
       </div>
   );
 }
