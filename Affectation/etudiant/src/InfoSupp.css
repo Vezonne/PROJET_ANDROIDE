@@ -1,0 +1,118 @@
+.toolbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Ajuster l'alignement vertical */
+  }
+  
+  .form-container {
+    margin-right: 20px;
+    display: flex; /* Utilisation de flexbox pour aligner les éléments */
+    flex-direction: column; /* Aligner les éléments en colonne */
+    align-items: center; /* Centrer horizontalement les éléments */
+    padding: 20px;
+    width: 90%;
+    border-radius: 10px;
+    margin-left: 20px;
+  }
+  
+  .h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    text-align: center; /* Aligner le texte au centre */
+  }
+
+  .h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .paragraphe {
+    font-size: 16px;
+    margin-bottom: 20px;
+    max-width: 600px; /* Définir une largeur maximale */
+    word-wrap: break-word; /* Forcer le passage à la ligne des mots longs */
+    background-color: #f2f2f2; /* Couleur de fond */
+    padding: 10px 20px; /* Espacement intérieur */
+    border-radius: 5px; /* Coins arrondis */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre légère */
+  }
+  
+  .form {
+    width: 100%;
+    max-width: 600px; /* Ajuster la largeur maximale du formulaire selon les besoins */
+  }
+  
+  .button-container {
+    margin-bottom: 20px;
+  }
+  
+
+
+  .submit-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 auto;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Styles pour le container submit */
+  .button-container-submit {
+    font-size: 16px;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  input[type="text"] {
+    width: calc(100% - 16px); /* Calculer la largeur en soustrayant les rembourrages */
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  input[type="text"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+
+
+ .button-Back-global-container{
+    padding: 20px;
+    display: flex; /* Utilisation de flexbox pour aligner les éléments */
+    flex-direction: column; /* Aligner les éléments en colonne */
+    width: 65%; /* Largeur maximale de 30% de la fenêtre */
+    min-width: 200px; /* Largeur minimale pour éviter une trop petite toolbar */
+    height: 100%;
+ }
+  
+ .retour-button-info {
+    background-color: #212121;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: auto; /* Ajout de cette propriété pour aligner le bouton à gauche */
+  }
+
+  .retour-button-info:hover {
+    background-color: #000000;
+  }

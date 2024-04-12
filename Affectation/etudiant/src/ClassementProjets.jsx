@@ -77,7 +77,7 @@ const ClassementProjets = () => {
         capaciteMax: "4",
         nom: "Projet 4",
         description: "Description du projet 2",
-        informationsSupplementaires: "Informations supplémentaires pour le projet 2",
+        informationsSupplementaires: "Projet de recherche sur l'intelligence artificielle",
         submitted : false,
         score : null,
         candidats: [
