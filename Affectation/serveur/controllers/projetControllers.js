@@ -20,8 +20,7 @@ module.exports.createProjet = async (req, res) => {
         description: req.body.description,
         informationsSupplementaires: req.body.informationsSupplementaires,
         submitted: req.body.submitted || false,
-        score: req.body.score || null,
-        candidats: req.body.candidats || []
+        groupes: req.body.groupes || []
     });
     try{
         const newProjet = await projet.save();
@@ -59,8 +58,7 @@ module.exports.updateProjet = async (req, res) => {
                 description: req.body.description,
                 informationsSupplementaires: req.body.informationsSupplementaires,
                 submitted: req.body.submitted,
-                score: req.body.score,
-                candidats: req.body.candidats
+                groupes: req.body.groupes
             }}
         );
         res.status(200).json(`project updated !`);
@@ -81,3 +79,51 @@ module.exports.deleteProjet = async (req, res) => {
 	    res.status(500).json({message : `${req.params.id} pas supprimé ${err}`});
 	}
   };
+
+
+module.exports.addGroupeCandidats = async (req, res) => {
+    const {id} = req.params;
+    const {nom, candidats, score} = req.body;
+    try {
+        const projet = await ProjetModel.findById(id);
+        if (!projet) {
+            return res.status(404).json({ message: 'Projet non trouvé' });
+        }
+    
+    const nouveauGroupe = {
+        nom,
+        score,
+        candidats
+    };
+    projet.groupes.push(nouveauGroupe);
+    await projet.save();
+    res.status(201).json({ message: 'Groupe avec candidats créé avec succès', groupe: nouveauGroupe });
+    }
+    catch (err) {
+        res.status(500).json({ message: 'Erreur serveur lors de la création du groupe avec candidats' });
+    }
+
+};
+
+
+module.exports.deleteGroupeCandidats = async (req, res) => {
+    const {id, groupeId} = req.params;
+    try {
+        const projet = await ProjetModel.findById(id);
+        if (!projet) {
+            return res.status(404).json({ message: 'Projet non trouvé' });
+        }
+        const groupe = projet.groupes.find(groupe => groupe._id == groupeId);
+        if (!groupe) {
+            return res.status(404).json({ message: 'Groupe non trouvé' });
+        }
+        projet.groupes = projet.groupes.filter(groupe => groupe._id != groupeId);
+        await projet.save();
+        res.status(200).json({ message: 'Groupe avec candidats supprimé avec succès' });
+    }
+    catch (err) {
+        res.status(500).json({ message: 'Erreur serveur lors de la suppression du groupe avec candidats' });
+    }
+}
+
+

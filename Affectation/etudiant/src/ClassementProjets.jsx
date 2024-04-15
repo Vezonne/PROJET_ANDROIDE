@@ -4,180 +4,47 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Toolbar from './Toolbar';
 
+
 const ClassementProjets = () => {
   // Exemple de projet en attendant le backend
   const projets = [
     {
-      id: 1,
-      responsable: "Prof Shen",
-      capaciteMin: "2",
-      capaciteMax: "4",
-      nom: "Projet 1",
-      description: "Description du projet 1",
-      informationsSupplementaires: "Informations supplémentaires pour le projet 1",
+      _id: "661d8f4929ae726cebead501",
+      responsable: "george",
+      capaciteMin: 2,
+      capaciteMax: 2,
+      nom: "projet 1",
+      description: "description du projet 1",
+      informationsSupplementaires: "informations supplementaires du projet 1",
       submitted: false,
-      score: null,
-      candidats: [
-        {
-          nom: "Nom du candidat",
-          prenom: "Prénom du candidat",
-          email: "email@example.com",
-          numEtudiant: "Numéro étudiant",
-          cv: "", // Chemin vers le CV du candidat
-          lettreMotivation: "" // Chemin vers la lettre de motivation du candidat
-        }
-      ]
+      groupes: [],
+      __v: 2
     },
     {
-      id: 2,
-      responsable: "Prof Rayan",
-      capaciteMin: "2",
-      capaciteMax: "2",
-      nom: "Projet 2",
-      description: "Description du projet 2",
-      informationsSupplementaires: "Informations supplémentaires pour le projet 2",
+      _id: "661d6d96ad83a91254aeca2a",
+      responsable: "george",
+      capaciteMin: 4,
+      capaciteMax: 4,
+      nom: "projet 2",
+      description: "description du projet 2",
+      informationsSupplementaires: "informations supplementaires du projet 1",
       submitted: false,
-      score: null,
-      candidats: [
-        {
-          nom: "Nom du candidat",
-          prenom: "Prénom du candidat",
-          email: "email@example.com",
-          numEtudiant: "Numéro étudiant",
-          cv: "", // Chemin vers le CV du candidat
-          lettreMotivation: "" // Chemin vers la lettre de motivation du candidat
-        }
-      ]
+      groupes: [],
+      __v: 2
     },
     {
-      id: 3,
-      responsable: "Prof george",
-      capaciteMin: "2",
-      capaciteMax: "2",
-      nom: "Projet 3",
-      description: "Description du projet 2",
-      informationsSupplementaires: "Informations supplémentaires pour le projet 2",
+      _id: "661d6da0ad83a91254aeca2c",
+      responsable: "george",
+      capaciteMin: 2,
+      capaciteMax: 3,
+      nom: "projet 3",
+      description: "description du projet 3",
+      informationsSupplementaires: "informations supplementaires du projet 1",
       submitted: false,
-      score: null,
-      candidats: [
-        {
-          nom: "Nom du candidat",
-          prenom: "Prénom du candidat",
-          email: "email@example.com",
-          numEtudiant: "Numéro étudiant",
-          cv: "", // Chemin vers le CV du candidat
-          lettreMotivation: "" // Chemin vers la lettre de motivation du candidat
-        }
-      ]
+      groupes: [],
+      __v: 2
     },
-    {
-      id: 4,
-      responsable: "Prof alex",
-      capaciteMin: "2",
-      capaciteMax: "4",
-      nom: "Projet 4",
-      description: "Description du projet 2",
-      informationsSupplementaires: "Projet de recherche sur l'intelligence artificielle",
-      submitted: false,
-      score: null,
-      candidats: [
-        {
-          nom: "Nom du candidat",
-          prenom: "Prénom du candidat",
-          email: "email@example.com",
-          numEtudiant: "Numéro étudiant",
-          cv: "", // Chemin vers le CV du candidat
-          lettreMotivation: "" // Chemin vers la lettre de motivation du candidat
-        }
-      ]
-    },
-    {
-      id: 5,
-      responsable: "Prof Shen",
-      capaciteMin: "2",
-      capaciteMax: "2",
-      nom: "Projet 5",
-      description: "Description du projet 1",
-      informationsSupplementaires: "Informations supplémentaires pour le projet 1",
-      submitted: false,
-      score: null,
-      candidats: [
-        {
-          nom: "Nom du candidat",
-          prenom: "Prénom du candidat",
-          email: "email@example.com",
-          numEtudiant: "Numéro étudiant",
-          cv: "", // Chemin vers le CV du candidat
-          lettreMotivation: "" // Chemin vers la lettre de motivation du candidat
-        }
-      ]
-    },
-    {
-      id: 6,
-      responsable: "Prof Rayan",
-      capaciteMin: "2",
-      capaciteMax: "4",
-      nom: "Projet 6",
-      description: "Description du projet 2",
-      informationsSupplementaires: "Informations supplémentaires pour le projet 2",
-      submitted: false,
-      score: null,
-      candidats: [
-        {
-          nom: "Nom du candidat",
-          prenom: "Prénom du candidat",
-          email: "email@example.com",
-          numEtudiant: "Numéro étudiant",
-          cv: "", // Chemin vers le CV du candidat
-          lettreMotivation: "" // Chemin vers la lettre de motivation du candidat
-        }
-      ]
-    },
-    {
-      id: 7,
-      responsable: "Prof george",
-      capaciteMin: "2",
-      capaciteMax: "4",
-      nom: "Projet 7",
-      description: "Description du projet 2",
-      informationsSupplementaires: "Informations supplémentaires pour le projet 2",
-      submitted: false,
-      score: null,
-      candidats: [
-        {
-          nom: "Nom du candidat",
-          prenom: "Prénom du candidat",
-          email: "email@example.com",
-          numEtudiant: "Numéro étudiant",
-          cv: "", // Chemin vers le CV du candidat
-          lettreMotivation: "" // Chemin vers la lettre de motivation du candidat
-        }
-      ]
-    },
-    {
-      id: 8,
-      responsable: "Prof alex",
-      capaciteMin: "4",
-      capaciteMax: "4",
-      nom: "Projet 8",
-      description: "Description du projet 2",
-      informationsSupplementaires: "Informations supplémentaires pour le projet 2",
-      submitted: false,
-      score: null,
-      candidats: [
-        {
-          nom: "Nom du candidat",
-          prenom: "Prénom du candidat",
-          email: "email@example.com",
-          numEtudiant: "Numéro étudiant",
-          cv: "", // Chemin vers le CV du candidat
-          lettreMotivation: "" // Chemin vers la lettre de motivation du candidat
-        }
-      ]
-    },
-
   ];
-
 
   const [projetsEtendus, setProjetsEtendus] = useState({});
   const [projetsSelectionnes, setProjetsSelectionnes] = useState([]);
@@ -191,6 +58,10 @@ const ClassementProjets = () => {
       setScores(JSON.parse(scoresLocalStorage));
     }
   }, [count]);
+
+  useEffect(() => {
+    console.log('projets : ', projets);
+  }, [projets]);
 
 
   // Fonction de gestion du clic sur la flèche déroulante pour afficher les informations supplémentaires
@@ -208,15 +79,15 @@ const ClassementProjets = () => {
   // Fonction de gestion du clic sur le bouton d'ajout d'un projet
   const addProject = (projet) => {
 
-    if (!projetsSelectionnes.find(p => p.id === projet.id)) {
+    if (!projetsSelectionnes.find(p => p._id === projet._id)) {
       //fenetre de confirmation pour l'ajout du projet
-      //const confirmation = window.confirm(`Êtes-vous sûr de vouloir vous ajouter ce projet "${projets[projet.id-1].nom}" ?`)
+      //const confirmation = window.confirm(`Êtes-vous sûr de vouloir vous ajouter ce projet "${projets[projet._id-1].nom}" ?`)
       //if (confirmation) {
       const updatedProjetsSelectionnes = [...projetsSelectionnes, projet];
-      const sortedProjetsSelectionnes = updatedProjetsSelectionnes.sort((a, b) => a.id - b.id);
+      const sortedProjetsSelectionnes = updatedProjetsSelectionnes.sort((a, b) => a._id - b._id);
 
       const newScores = { ...scores };
-      newScores[projet.id] = ''; // Score vide
+      newScores[projet._id] = ''; // Score vide
 
       setProjetsSelectionnes(sortedProjetsSelectionnes);
       setScores(newScores);
@@ -247,7 +118,7 @@ const ClassementProjets = () => {
       window.alert("Vous devez selectionner au moins un projet pour continuer");
     }
     else {
-      navigate(`/infoSupp/${projetsSelectionnes[0].id}`);
+      navigate(`/infoSupp/${projetsSelectionnes[0]._id}`);
     }
 
   };
@@ -273,8 +144,8 @@ const ClassementProjets = () => {
             </thead>
             <tbody>
               {projets.map(projet => (
-                <React.Fragment key={projet.id}>
-                  <tr key={projet.id}>
+                <React.Fragment key={projet._id}>
+                  <tr key={projet._id}>
                     <td>{projet.nom}</td>
                     <td>{projet.responsable}</td>
                     <td>
@@ -284,20 +155,20 @@ const ClassementProjets = () => {
                     </td>
                     <td>{projet.description}</td>
                     <td>
-                      <button className='add-button' onClick={() => addProject(projet)} disabled={projetsSelectionnes.some(p => p.id === projet.id)}>
+                      <button className='add-button' onClick={() => addProject(projet)} disabled={projetsSelectionnes.some(p => p._id === projet._id)}>
                         +
                       </button>
                     </td>
                     <td>
                       <button
                         className="arrow-button"
-                        onClick={() => toggleInformationsSupplementaires(projet.id)}
+                        onClick={() => toggleInformationsSupplementaires(projet._id)}
                       >
-                        {projetsEtendus[projet.id] ? '↑' : '↓'}
+                        {projetsEtendus[projet._id] ? '↑' : '↓'}
                       </button>
                     </td>
                   </tr>
-                  {projetsEtendus[projet.id] && (
+                  {projetsEtendus[projet._id] && (
                     <tr>
                       <td colSpan="5" className="informations-supplementaires">
                         {projet.informationsSupplementaires}

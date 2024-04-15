@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Toolbar from './Toolbar';
 import './InfoSupp.css';
+import axios from 'axios';
 
 const InfoSupp = () => {
   const { projectId } = useParams();
@@ -11,14 +12,15 @@ const InfoSupp = () => {
   const navigate = useNavigate();
   const [scores, setScores] = useState({});
   const [descriptionProjet, setDescriptionProjet] = useState('');
-
+  const [projetNom, setProjetNom] = useState('');
+  const [nomGroupe, setNomGroupe] = useState('');
 
   const handleBackButton = () => {
     navigate('/classementProjets');
   };
 
   useEffect(() => {
-    const projetIndex = projetsSelectionnes.findIndex(projet => projet.id === parseInt(projectId));
+    const projetIndex = projetsSelectionnes.findIndex(projet => projet._id === projectId);
     if (projetIndex !== -1) {
       const capaciteMax = projetsSelectionnes[projetIndex].capaciteMax;
       const newInfos = Array.from({ length: capaciteMax }, () => ({
@@ -27,12 +29,13 @@ const InfoSupp = () => {
         numeroEtudiant: '',
         email: ''
       }));
+      setNomGroupe('');
       setInfos(newInfos);
       setDescriptionProjet(projetsSelectionnes[projetIndex].informationsSupplementaires);
     } else
       if (projetsSelectionnes.length > 0) {
-        // Naviguer vers la page d'indice projetsSelectionnes[0].id
-        navigate(`/infoSupp/${projetsSelectionnes[0].id}`);
+        // Naviguer vers la page d'indice projetsSelectionnes[0]._id
+        navigate(`/infoSupp/${projetsSelectionnes[0]._id}`);
       }
   }, [projetsSelectionnes, projectId]);
 
@@ -49,9 +52,21 @@ const InfoSupp = () => {
 
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
 
     e.preventDefault();
+
+    try{
+      const response = await axios.post(`http://localhost:5000/api/projets/${projectId}/groupe/`, {
+        nom : nomGroupe,
+        score : scores[projectId],
+        candidats : infos
+      });
+      console.log('Groupe ajouté avec succès :', response.data);
+
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout du groupe :', error);
+    }
 
     // Vérifier que tous les scores sont renseignés
     const allScoresPresent = Object.values(scores).every(score => score !== '');
@@ -66,8 +81,11 @@ const InfoSupp = () => {
         email: '',
         numeroEtudiant: ''
       })));
+      setNomGroupe('');
       return; // Arrêter la fonction si les scores ne sont pas tous renseignés
     }
+
+    
 
     console.log('Informations soumises :', infos);
     // Réinitialiser les champs après la soumission
@@ -77,10 +95,15 @@ const InfoSupp = () => {
       email: '',
       numeroEtudiant: ''
     })));
+    setNomGroupe('');
+
+
 
     // Marquer le projet soumis comme soumis
     const updatedProjetsSelectionnes = projetsSelectionnes.map(projet => {
-      if (projet.id === parseInt(projectId)) {
+      
+      if (projet._id === projectId) {
+        console.log("ici");
         return { ...projet, submitted: true };
       } else {
         return projet;
@@ -95,7 +118,7 @@ const InfoSupp = () => {
     // Naviguer vers le premier projet non soumis
     const prochainProjet = updatedProjetsSelectionnes.find(projet => !projet.submitted);
     if (prochainProjet) {
-      navigate(`/infoSupp/${prochainProjet.id}`);
+      navigate(`/infoSupp/${prochainProjet._id}`);
     } else {
       navigate('/classementProjets');
     }
@@ -134,11 +157,18 @@ const InfoSupp = () => {
     console.log("Valeur actuelle de projetsSelectionnes :", projetsSelectionnes);
   }, [projetsSelectionnes]);
 
+  useEffect(() => {
+    const projet = projetsSelectionnes.find(projet => projet._id === projectId);
+    if (projet) {
+      setProjetNom(projet.nom);
+    }
+  }, [projetsSelectionnes, projectId]);
+
   return (
     <div className='toolbar-container'>
       <div className='button-Back-global-container'>
         <div className='form-container'>
-          <h1 className='h1'>Informations pour le Projet {projectId}</h1>
+          <h1 className='h1'>{projetNom}</h1>
           <p className='paragraphe'>
             Merci de remplir les informations requises pour chaque participant. Si vous êtes en dessous du nombre maximal de candidats, remplissez les champs restants avec des ***.
             <br />
@@ -147,6 +177,13 @@ const InfoSupp = () => {
           <h2>Description du projet :  </h2>
           <p>{descriptionProjet}</p>
           <form className="form" onSubmit={handleSubmit}>
+            <label htmlFor="nomGroupe">Nom du groupe : </label>
+            <input
+              type="text"
+              value={nomGroupe}
+              onChange={(e) => setNomGroupe(e.target.value)}
+              required
+            />
             {(() => {
               const elements = [];
               for (let index = 0; index < infos.length; index++) {

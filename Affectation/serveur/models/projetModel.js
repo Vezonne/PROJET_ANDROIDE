@@ -1,5 +1,23 @@
 const mongoose = require('mongoose');
 
+
+// Schéma pour un candidat
+const CandidatSchema = new mongoose.Schema({
+  nom: String,
+  prenom: String,
+  email: String,
+  numeroEtudiant: String,
+  cv: String,
+  lettreMotivation: String
+});
+
+// Schéma pour un groupe
+const GroupeSchema = new mongoose.Schema({
+  nom: String,
+  score : String,
+  candidats: [CandidatSchema] // Liste de candidats dans ce groupe
+});
+
 const projetSchema = new mongoose.Schema({
     responsable: {
       type: String,
@@ -28,18 +46,7 @@ const projetSchema = new mongoose.Schema({
       type: Boolean,
       default: false
     },
-    score: {
-      type: Number,
-      default: null
-    },
-    candidats: [{
-      nom: String,
-      prenom: String,
-      email: String,
-      numEtudiant: String,
-      cv: String,
-      lettreMotivation: String
-    }]
+    groupes: [GroupeSchema] // Liste de groupes candidats au projet
   });
   
   const Projet = mongoose.model('Projet', projetSchema);
