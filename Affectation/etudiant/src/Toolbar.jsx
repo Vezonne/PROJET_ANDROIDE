@@ -103,7 +103,7 @@ const Toolbar = ({count, modifierVal}) => {
                           <option key={score} value={score}>{score}</option>
                         ))}
                       </select>
-                  <button className='toolbar-button' type="button" onClick={() => handleRemoveProject(projet._id)}>Supprimer</button>
+                  <button className='delete-button' type="button" onClick={() => handleRemoveProject(projet._id)}>Supprimer</button>
                 </li>
                 )}
                 </div>
