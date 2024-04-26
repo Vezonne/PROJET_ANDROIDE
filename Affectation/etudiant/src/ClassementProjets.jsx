@@ -3,54 +3,36 @@ import './ClassementProjets.css';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Toolbar from './Toolbar';
+import axios from 'axios';
 
 
 const ClassementProjets = () => {
-  // Exemple de projet en attendant le backend
-  const projets = [
-    {
-      _id: "661d8f4929ae726cebead501",
-      responsable: "george",
-      capaciteMin: 2,
-      capaciteMax: 2,
-      nom: "projet 1",
-      description: "description du projet 1",
-      informationsSupplementaires: "informations supplementaires du projet 1",
-      submitted: false,
-      groupes: [],
-      __v: 2
-    },
-    {
-      _id: "661d6d96ad83a91254aeca2a",
-      responsable: "george",
-      capaciteMin: 4,
-      capaciteMax: 4,
-      nom: "projet 2",
-      description: "description du projet 2",
-      informationsSupplementaires: "informations supplementaires du projet 1",
-      submitted: false,
-      groupes: [],
-      __v: 2
-    },
-    {
-      _id: "661d6da0ad83a91254aeca2c",
-      responsable: "george",
-      capaciteMin: 2,
-      capaciteMax: 3,
-      nom: "projet 3",
-      description: "description du projet 3",
-      informationsSupplementaires: "informations supplementaires du projet 1",
-      submitted: false,
-      groupes: [],
-      __v: 2
-    },
-  ];
+
+  
 
   const [projetsEtendus, setProjetsEtendus] = useState({});
   const [projetsSelectionnes, setProjetsSelectionnes] = useState([]);
   const navigate = useNavigate();
   const [count, setCount] = useState(0);
   const [scores, setScores] = useState({});
+  const [projets, setProjets] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/api/projets');
+            setProjets(response.data);
+            console.log('Projets récupérés:', response.data);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des projets:', error);
+        }
+    };
+
+    fetchData();
+}, []);
+
+
+
 
   useEffect(() => {
     const scoresLocalStorage = localStorage.getItem('scores');
