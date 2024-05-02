@@ -1,10 +1,6 @@
 import numpy as np
 from mallows_models import mallows_kendall as mk
-from mallows_models import permutil as pu
-import scipy.stats as stats
-import spicy as sp
-import pandas as pd
-import ranky as rk
+from Class import *
 
 NB_PROJ = 15
 NB_STD = 40
@@ -14,82 +10,38 @@ MIN_PROJ_SIZE = 2
 MAX_PROJ_SIZE = 5
 MIN_CHOICE_PROJ = 3
 
-class Project:
-    nb_proj = 0
 
-    def __init__(self, proj_size):
-        self.id = Project.nb_proj
-        self.size = proj_size
-        Project.nb_proj += 1
-
-    def __str__(self):
-        return f"Project {self.id} of size {self.size}"
-    
-class Student:
-    nb_student = 0
-
-    def __init__(self):
-        self.id = Student.nb_student
-        Student.nb_student += 1
-
-    def __str__(self):
-        str = f"Std {self.id} pref: ["
-        for p in self.pref:
-            str += f"{p: >2} "
-        str += "\b]"
-        return str
-    
-    def set_preference(self, preference):
-        self.pref = preference
-    
-class Group:
-    nb_group = 0
-
-    def __init__(self, group_size):
-        self.size = group_size
-        self.studs = []
-        self.pref = []
-        self.id = Group.nb_group
-        Group.nb_group += 1
-
-    def __str__(self):
-        return f"Group {self.id} of size {self.size}"
-    
-    def add_student(self, student):
-        self.studs.append(student)
-    
-    def add_pref(self, pref):
-        self.pref.append(pref)
-
-def generate_projs():
+def generate_projs(nb_proj=NB_PROJ, min_size=MIN_PROJ_SIZE, max_size=MAX_PROJ_SIZE):
     projects = []
-    proj_sizes = np.random.normal(3, 0.75, (NB_PROJ))
+    proj_sizes = np.random.normal(3, 0.75, (nb_proj))
 
-    for i in range(NB_PROJ):
+    for i in range(nb_proj):
         proj_size = round(proj_sizes[i])
-        proj_size = np.min([proj_size, MAX_PROJ_SIZE])
-        proj_size = np.max([proj_size, MIN_PROJ_SIZE])
+        proj_size = np.min([proj_size, max_size])
+        proj_size = np.max([proj_size, min_size])
         projects.append(Project(proj_size))
     return projects
 
-def generate_class():
-    classes = np.zeros((NB_CLASS, NB_PROJ), dtype=int)
+def generate_class(nb_class=NB_CLASS, nb_proj=NB_PROJ):
+    std_class = np.zeros((nb_class, nb_proj), dtype=int)
 
-    for i in range(NB_CLASS):
-        pref = np.arange(NB_PROJ)
+    for i in range(nb_class):
+        pref = np.arange(nb_proj)
         np.random.shuffle(pref)
-        classes[i] =  pref
-    return classes
+        std_class[i] =  pref
+    return std_class
 
-def generate_studs_pref(classes, props=None):
+def generate_studs_pref(classes: list[int], nb_std=NB_STD, props: list[int]=None):
     studs_pref = np.array([])
-    studs = np.zeros((NB_STD), dtype=Student)
+    studs = np.zeros((nb_std), dtype=Student)
+    nb_class = classes.shape[0]
+    nb_proj = classes.shape[1]
 
     if not props:
-        props = np.full(NB_CLASS, 1/NB_CLASS)
+        props = np.full(nb_class, 1/nb_class)
 
-    for i in range(NB_CLASS):
-        sample = mk.sample(m=int(props[i]*NB_STD), n=NB_PROJ, theta=1, s0=classes[i])
+    for i in range(nb_class):
+        sample = mk.sample(m=int(props[i]*nb_std), n=nb_proj, theta=1, s0=classes[i])
 
         if not len(studs_pref):
             studs_pref = sample
@@ -98,29 +50,62 @@ def generate_studs_pref(classes, props=None):
     
     np.random.shuffle(studs_pref)
 
-    for i in range(NB_STD):
+    for i in range(nb_std):
         std = Student()
         std.set_preference(studs_pref[i])
         studs[i] = std
 
     return studs
 
-def generate_stud_rank():
-    stud_rank = np.arange(NB_STD)
+def generate_stud_rank(nb_std=NB_STD):
+    """
+    Génère un tableau de classement aléatoire des étudiants.
+
+    Args:
+        nb_std (int): Le nombre d'étudiants. Par défaut, il est égal à NB_STD.
+
+    Returns:
+        numpy.ndarray: Un tableau de classement aléatoire des étudiants.
+    """
+    stud_rank = np.arange(nb_std)
     np.random.shuffle(stud_rank)
     return stud_rank
 
-# def generate_groups(studs_pref):
-#     groups = []
-#     for sp in studs_pref:
-#         size = np.round(np.random.normal(3, 0.75))
-#         size = np.min([size, MAX_PROJ_SIZE])
-#         size = np.max([size, MIN_PROJ_SIZE])
-#         groups.append(group(size))
-#         groups[-1].add_pref(sp)
+def generate_groups(students: list[Student], min_size=MAX_PROJ_SIZE, max_size=MAX_PROJ_SIZE, min_choices=MIN_CHOICE):
+    groups = []
 
-#         for i in range(size):
-#             while()
+    for std in students:
+
+        if len(std.groups) > min_choices:
+            continue
+
+        size = round(np.random.normal(3, 0.75))
+        size = np.min([size, max_size])
+        size = np.max([size, min_size])
+        groups.append(Group(size))
+        groups[-1].add_student(std)
+
+        for i in range(size-1):
+            std_added = False
+
+            while(not std_added):
+                new_std = np.random.choice(students)
+
+                if new_std in groups[-1].studs:
+                    continue
+
+                if mk.distance(std.pref, new_std.pref) < 5:
+                    groups[-1].add_student(new_std)
+                    std_added = True
+                
+                else:
+                    n = np.random.choice([0,1], p=[0.75, 0.25])
+                    
+                    if n == 1:
+                        groups[-1].add_student(new_std)
+                        std_added = True
+
+    return groups
 
 def main(args=None):
     projects = generate_projs()
@@ -144,6 +129,18 @@ def main(args=None):
         # for i in range(NB_CLASS):
         #     lt.append(mk.distance(classes[i], s.pref))
         print(f"{s}")
+
+    groups = generate_groups(studs)
+    print("\nGroups:")
+    for g in groups:
+        print(g)
+
+    for s in studs:
+        str = f"std: {s.id: >2} grp: ["
+        for g in s.groups:
+            str += f"{g.id: >2} "
+        str += f"\b]"
+        print(str)
 
 if __name__ == "__main__":
     main()
