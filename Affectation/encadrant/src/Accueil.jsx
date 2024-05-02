@@ -12,9 +12,18 @@ function Accueil() {
         <br />
         Ils apparaitront dans la liste des projets disponibles pour les étudiants.
       </p>
-      <Link to="/ajoutProjet">
-        <button>Classement des projets</button>
-      </Link>
+
+      <p>
+        vous pouvez aussi donner votre liste de préférence en fonction des étudiants qui ont candidatés.
+      </p>
+      <div className='button-container'>
+        <Link to="/ajoutProjet">
+          <button className='btn-proj'>Création et visualisation des projets</button>
+        </Link>
+        <Link to="/classementEtudiant">
+          <button className='btn-etu'>Classement des etudiants</button>
+        </Link>
+      </div>
     </div>
   );
 }

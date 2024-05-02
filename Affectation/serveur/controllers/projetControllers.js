@@ -20,7 +20,8 @@ module.exports.createProjet = async (req, res) => {
         description: req.body.description,
         informationsSupplementaires: req.body.informationsSupplementaires,
         submitted: req.body.submitted || false,
-        groupes: req.body.groupes || []
+        groupes: req.body.groupes || [],
+        classement: req.body.classement || new Map()
     });
     try{
         const newProjet = await projet.save();
@@ -80,6 +81,19 @@ module.exports.deleteProjet = async (req, res) => {
 	}
   };
 
+module.exports.getAllGroupesCandidats = async (req, res) => {
+    const {id} = req.params;
+    try {
+        const projet = await ProjetModel.findById(id);
+        if (!projet) {
+            return res.status(404).json({ message: 'Projet non trouvé' });
+        }
+        res.status(200).json(projet.groupes);
+    }
+    catch (err) {
+        res.status(500).json({ message: 'Erreur serveur lors de la récupération des groupes avec candidats' });
+    }
+};
 
 module.exports.addGroupeCandidats = async (req, res) => {
     const {id} = req.params;
@@ -126,4 +140,37 @@ module.exports.deleteGroupeCandidats = async (req, res) => {
     }
 }
 
+
+module.exports.getClassement = async (req, res) => {
+    const {id} = req.params;
+    try {
+        const projet = await ProjetModel.findById(id);
+        if (!projet) {
+            return res.status(404).json({ message: 'Projet non trouvé' });
+        }
+        res.status(200).json(projet.classement);
+    }
+    catch (err) {
+        res.status(500).json({ message: 'Erreur serveur lors de la récupération du classement' });
+    }
+};
+
+
+module.exports.addClassement = async (req, res) => {
+
+    const {id} = req.params;
+    const {classement} = req.body;
+    try {
+        const projet = await ProjetModel.findById(id);
+        if (!projet) {
+            return res.status(404).json({ message: 'Projet non trouvé' });
+        }
+        projet.classement = classement;
+        await projet.save();
+        res.status(200).json({ message: 'Classement ajouté avec succès' });
+    }
+    catch (err) {
+        res.status(500).json({ message: 'Erreur serveur lors de l\'ajout du classement' });
+    }
+};
 

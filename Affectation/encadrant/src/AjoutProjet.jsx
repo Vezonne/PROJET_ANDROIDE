@@ -28,6 +28,8 @@ const AjoutProjet = () => {
     }, [cpt]);
 
 
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         // Création de l'objet projet
@@ -79,6 +81,8 @@ const AjoutProjet = () => {
             console.error('Erreur lors de la suppression du projet:', error);
         }
     }
+    
+    
 
     return (
         <div className='container'>

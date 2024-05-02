@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-
 // Schéma pour un candidat
 const CandidatSchema = new mongoose.Schema({
   nom: String,
@@ -19,36 +18,40 @@ const GroupeSchema = new mongoose.Schema({
 });
 
 const projetSchema = new mongoose.Schema({
-    responsable: {
-      type: String,
-      required: true
-    },
-    capaciteMin: {
-      type: Number,
-      required: true
-    },
-    capaciteMax: {
-      type: Number,
-      required: true
-    },
-    nom: {
-      type: String,
-      required: true
-    },
-    description: {
-      type: String,
-      required: true
-    },
-    informationsSupplementaires: {
-      type: String
-    },
-    submitted: {
-      type: Boolean,
-      default: false
-    },
-    groupes: [GroupeSchema] // Liste de groupes candidats au projet
-  });
-  
-  const Projet = mongoose.model('Projet', projetSchema);
-  
-  module.exports = Projet;
+  responsable: {
+    type: String,
+    required: true
+  },
+  capaciteMin: {
+    type: Number,
+    required: true
+  },
+  capaciteMax: {
+    type: Number,
+    required: true
+  },
+  nom: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  informationsSupplementaires: {
+    type: String
+  },
+  submitted: {
+    type: Boolean,
+    default: false
+  },
+  groupes: [GroupeSchema], // Liste de groupes candidats au projet
+  classement: {
+    type: Map, // Utilisation de Map pour stocker un dictionnaire
+    of: String // Les valeurs seront des chaînes de caractères
+  }
+});
+
+const Projet = mongoose.model('Projet', projetSchema);
+
+module.exports = Projet;

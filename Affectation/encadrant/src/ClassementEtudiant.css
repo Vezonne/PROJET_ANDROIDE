@@ -1,0 +1,23 @@
+.classement-container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.projets-list {
+    list-style: none;
+    padding: 0;
+}
+
+.projets-list li {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.projets-list li h3 {
+    margin-top: 0;
+}
+
+.projets-list li p {
+    margin-bottom: 0;
+}

@@ -1,33 +1,47 @@
 /* Accueil.css */
 
 .accueil-container {
-    text-align: center;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .accueil-container h1 {
-    font-size: 2em;
-    color: #333;
-  }
-  
-  .accueil-container p {
-    font-size: 1.2em;
-    color: #666;
-  }
-  
-  .accueil-container button {
-    padding: 10px 20px;
-    font-size: 1.2em;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .accueil-container button:hover {
-    background-color: #0056b3;
-  }
-  
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.accueil-container h1 {
+  font-size: 2em;
+  color: #333;
+}
+
+.accueil-container p {
+  font-size: 1.2em;
+  color: #666;
+}
+
+
+
+.accueil-container button:hover {
+  background-color: #0056b3;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 10px;
+
+}
+
+
+.btn-etu,
+.btn-proj {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 10px;
+  margin-left: 10px;
+}

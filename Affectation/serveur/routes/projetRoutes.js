@@ -19,10 +19,19 @@ router.put('/:id', projetController.updateProjet);
 // Supprimer un projet
 router.delete('/:id', projetController.deleteProjet);
 
+// Obtenir tous les groupes candidats d'un projet
+router.get('/:id/groupe', projetController.getAllGroupesCandidats);
+
 // Ajouter un groupe à un projet avec des candidats
 router.post('/:id/groupe', projetController.addGroupeCandidats);
 
 // supprimer un groupe d'un projet
 router.delete('/:id/groupe/:groupeId', projetController.deleteGroupeCandidats);
+
+// obtenir le classement d'un projet
+router.get('/:id/classement', projetController.getClassement);
+
+// ajouter un classement à un projet
+router.post('/:id/classement', projetController.addClassement);
 
 module.exports = router;

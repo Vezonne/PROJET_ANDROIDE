@@ -173,6 +173,8 @@ const InfoSupp = () => {
             Merci de remplir les informations requises pour chaque participant. Si vous êtes en dessous du nombre maximal de candidats, remplissez les champs restants avec des ***.
             <br />
             Vous devez cependant etre au moins la capacité minimum du projet pour pouvoir postuler, sinon vous ne serez pas pris en compte.
+            <br />
+            ATTENTION : se mettre dans participant n°1, pour que le score associé soit le bon. 
           </p>
           <h2>Description du projet :  </h2>
           <p>{descriptionProjet}</p>
