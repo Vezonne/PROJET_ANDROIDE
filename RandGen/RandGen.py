@@ -5,21 +5,15 @@ from Class import *
 NB_PROJ = 15
 NB_STD = 40
 NB_CLASS = 4
-MIN_CHOICE = 5
 MIN_PROJ_SIZE = 2
-MAX_PROJ_SIZE = 5
+MAX_PROJ_SIZE = 4
+MIN_CHOICE = 3
 MIN_CHOICE_PROJ = 3
 
 
 def generate_projs(nb_proj=NB_PROJ, min_size=MIN_PROJ_SIZE, max_size=MAX_PROJ_SIZE):
-    projects = []
-    proj_sizes = np.random.normal(3, 0.75, (nb_proj))
-
-    for i in range(nb_proj):
-        proj_size = round(proj_sizes[i])
-        proj_size = np.min([proj_size, max_size])
-        proj_size = np.max([proj_size, min_size])
-        projects.append(Project(proj_size))
+    Project.set_min_max(min_size, max_size)
+    projects = [Project() for _ in range(nb_proj)]
     return projects
 
 def generate_class(nb_class=NB_CLASS, nb_proj=NB_PROJ):
@@ -57,53 +51,49 @@ def generate_studs_pref(classes: list[int], nb_std=NB_STD, props: list[int]=None
 
     return studs
 
-def generate_stud_rank(nb_std=NB_STD):
-    """
-    Génère un tableau de classement aléatoire des étudiants.
-
-    Args:
-        nb_std (int): Le nombre d'étudiants. Par défaut, il est égal à NB_STD.
-
-    Returns:
-        numpy.ndarray: Un tableau de classement aléatoire des étudiants.
-    """
-    stud_rank = np.arange(nb_std)
+def generate_stud_rank(students):
+    stud_rank = np.arange(students.shape[0])
     np.random.shuffle(stud_rank)
-    return stud_rank
+    for i in range(students.shape[0]):
+        students[stud_rank[i]].set_rank(i)
 
-def generate_groups(students: list[Student], min_size=MAX_PROJ_SIZE, max_size=MAX_PROJ_SIZE, min_choices=MIN_CHOICE):
+def generate_groups(students: list[Student], min_size=MIN_PROJ_SIZE, max_size=MAX_PROJ_SIZE, min_choices=MIN_CHOICE):
     groups = []
 
     for std in students:
 
-        if len(std.groups) > min_choices:
-            continue
+        while len(std.groups) < min_choices:
+            size = round(np.random.normal(3, 0.75))
+            size = np.min([size, max_size])
+            size = np.max([size, min_size])
+            groups.append(Group(size))
+            groups[-1].add_student(std)
 
-        size = round(np.random.normal(3, 0.75))
-        size = np.min([size, max_size])
-        size = np.max([size, min_size])
-        groups.append(Group(size))
-        groups[-1].add_student(std)
+            for i in range(size-1):
+                std_added = False
 
-        for i in range(size-1):
-            std_added = False
+                while(not std_added):
+                    new_std = np.random.choice(students)
 
-            while(not std_added):
-                new_std = np.random.choice(students)
+                    if new_std in groups[-1].studs:
+                        continue
 
-                if new_std in groups[-1].studs:
-                    continue
+                    if len(new_std.groups) > 0:
+                        t = 1/np.exp(len(new_std.groups))
+                    else:
+                        t = 1
+                    n = np.random.choice([0,1], p=[1-t, t])
+                    if n == 0:
+                        continue
 
-                if mk.distance(std.pref, new_std.pref) < 5:
-                    groups[-1].add_student(new_std)
-                    std_added = True
-                
-                else:
-                    n = np.random.choice([0,1], p=[0.75, 0.25])
+                    d = 1/mk.distance(std.pref, new_std.pref)
+                    n = np.random.choice([0,1], p=[1-d, d])
                     
                     if n == 1:
-                        groups[-1].add_student(new_std)
-                        std_added = True
+                        continue
+
+                    groups[-1].add_student(new_std)
+                    std_added = True
 
     return groups
 
@@ -113,16 +103,13 @@ def main(args=None):
     for p in projects:
         print(p)
 
-    std_rk = generate_stud_rank()
-    print("\nStudents rank:")
-    print(std_rk)
-
     classes = generate_class()
     print("\nClasses:")
     for c in classes:
         print(c)
 
     studs = generate_studs_pref(classes)
+    std_rk = generate_stud_rank(studs)
     print("\nStudents preferences:")
     for s in studs:
         # lt = []
@@ -141,6 +128,8 @@ def main(args=None):
             str += f"{g.id: >2} "
         str += f"\b]"
         print(str)
+
+    print(f"mean grps per std: {np.mean([len(s.groups) for s in studs]):.2f}")
 
 if __name__ == "__main__":
     main()
