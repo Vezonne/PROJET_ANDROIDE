@@ -25,7 +25,7 @@ def generate_class(nb_class=NB_CLASS, nb_proj=NB_PROJ):
         std_class[i] =  pref
     return std_class
 
-def generate_studs_pref(classes: list[int], nb_std=NB_STD, props: list[int]=None):
+def generate_studs_pref(classes, nb_std=NB_STD, props=None):
     studs_pref = np.array([])
     studs = np.zeros((nb_std), dtype=Student)
     nb_class = classes.shape[0]
@@ -57,7 +57,7 @@ def generate_stud_rank(students):
     for i in range(students.shape[0]):
         students[stud_rank[i]].set_rank(i)
 
-def generate_groups(students: list[Student], min_size=MIN_PROJ_SIZE, max_size=MAX_PROJ_SIZE, min_choices=MIN_CHOICE):
+def generate_groups(students, min_size=MIN_PROJ_SIZE, max_size=MAX_PROJ_SIZE, min_choices=MIN_CHOICE):
     groups = []
 
     for std in students:

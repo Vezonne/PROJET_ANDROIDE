@@ -5,16 +5,17 @@ class Project:
     min_size = 0
     max_size = 0
 
+    @staticmethod
+    def set_min_max(min, max):
+        Project.min_size = min
+        Project.max_size = max
+
     def __init__(self):
         self.id = Project.nb_proj
         Project.nb_proj += 1
 
     def __str__(self):
         return f"Project {self.id: >2}"
-    
-    def set_min_max(min, max):
-        Project.min_size = min
-        Project.max_size = max
     
 class Student:
     nb_student = 0
