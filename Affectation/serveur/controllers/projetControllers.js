@@ -174,3 +174,19 @@ module.exports.addClassement = async (req, res) => {
     }
 };
 
+module.exports.deleteClassement = async (req, res) => {
+    const {id} = req.params;
+    try {
+        const projet = await ProjetModel.findById(id);
+        if (!projet) {
+            return res.status(404).json({ message: 'Projet non trouvé' });
+        }
+        projet.classement = new Map();
+        await projet.save();
+        res.status(200).json({ message: 'Classement supprimé avec succès' });
+    }
+    catch (err) {
+        res.status(500).json({ message: 'Erreur serveur lors de la suppression du classement' });
+    }
+};
+

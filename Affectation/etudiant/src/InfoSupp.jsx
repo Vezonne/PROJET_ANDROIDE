@@ -37,7 +37,7 @@ const InfoSupp = () => {
         // Naviguer vers la page d'indice projetsSelectionnes[0]._id
         navigate(`/infoSupp/${projetsSelectionnes[0]._id}`);
       }
-  }, [projetsSelectionnes, projectId]);
+  }, [projetsSelectionnes, projectId, navigate]);
 
   const handleInputChange = (index, name, value) => {
     const newInfos = [...infos];
@@ -103,7 +103,7 @@ const InfoSupp = () => {
     const updatedProjetsSelectionnes = projetsSelectionnes.map(projet => {
       
       if (projet._id === projectId) {
-        console.log("ici");
+
         return { ...projet, submitted: true };
       } else {
         return projet;
@@ -124,6 +124,8 @@ const InfoSupp = () => {
     }
 
   };
+
+
 
   const modifierCount = (val) => {
     setCount(val);
@@ -163,6 +165,20 @@ const InfoSupp = () => {
       setProjetNom(projet.nom);
     }
   }, [projetsSelectionnes, projectId]);
+
+
+  useEffect(() => {
+    if (projetsSelectionnes && projetsSelectionnes.length > 0) {
+        const prochainProjet = projetsSelectionnes.find(projet => !projet.submitted);
+        console.log('prochainProjet :', prochainProjet);
+        if (prochainProjet) {
+            navigate(`/infoSupp/${prochainProjet._id}`);
+        } else {
+            navigate('/classementProjets');
+        }
+    }
+}, [projetsSelectionnes]);
+
 
   return (
     <div className='toolbar-container'>

@@ -32,6 +32,12 @@ const AjoutProjet = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (capaciteMin > capaciteMax) {
+            alert('La capacité minimum doit être inférieure ou égale à la capacité maximum');
+            return;
+        }
+
         // Création de l'objet projet
         const newProject = {
             responsable: responsable,

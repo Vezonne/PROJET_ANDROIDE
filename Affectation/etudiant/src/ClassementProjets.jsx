@@ -41,9 +41,6 @@ const ClassementProjets = () => {
     }
   }, [count]);
 
-  useEffect(() => {
-    console.log('projets : ', projets);
-  }, [projets]);
 
 
   // Fonction de gestion du clic sur la flèche déroulante pour afficher les informations supplémentaires
@@ -76,7 +73,6 @@ const ClassementProjets = () => {
 
       localStorage.setItem('projetsSelectionnes', JSON.stringify(sortedProjetsSelectionnes));
       localStorage.setItem('scores', JSON.stringify(newScores));
-      console.log("localStorage.getItem('scores') :", localStorage.getItem('scores'));
       //}
 
       // window.location.reload();

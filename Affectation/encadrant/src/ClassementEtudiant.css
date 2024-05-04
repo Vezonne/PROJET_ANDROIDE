@@ -1,6 +1,18 @@
 .classement-container {
     width: 80%;
     margin: 0 auto;
+
+}
+
+.instructions-div {
+    border-radius: 10px;
+    background-color: #f2f2f2;
+    padding: 10px;
+}
+
+.classement-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .projets-list {
@@ -11,13 +23,119 @@
 .projets-list li {
     margin-bottom: 20px;
     border: 1px solid #ccc;
-    padding: 10px;
+    padding: 20px;
+    border-radius: 5px;
+    /* Ajout d'une bordure arrondie */
+    position: relative;
+    /* Ajout de position relative */
 }
 
-.projets-list li h3 {
-    margin-top: 0;
+.projets-list li span {
+    display: inline-block;
 }
 
-.projets-list li p {
-    margin-bottom: 0;
+.projets-list li button {
+    position: absolute;
+    right: 10px;
+    /* Positionné à droite */
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #666;
+    transition: color 0.3s ease;
+    z-index: 1;
+    /* Mettre en premier plan */
+
+}
+
+.projets-list li button:hover {
+    color: #000;
+}
+
+.groupes-list {
+    list-style: none;
+    padding: 0;
+}
+
+.groupes-list li {
+    margin-bottom: 30px;
+}
+
+.submit-button {
+    margin-left: auto;
+    /* Pour placer le bouton à droite */
+    margin-top: -10px;
+    /* Pour ajuster la position du bouton */
+}
+
+.submit-button:disabled {
+    pointer-events: none;
+    /* Désactiver les événements de pointer */
+    opacity: 0.5;
+    /* Réduire l'opacité du bouton désactivé */
+}
+
+.groupes-list li button {
+    top: 10px;
+    /* Déplacer le bouton vers le haut */
+    right: 10px;
+    /* Déplacer le bouton vers la droite */
+}
+
+.groupes-list li button:hover {
+    color: #000;
+}
+
+
+.deroule-div {
+    display: flex;
+    align-items: center;
+}
+
+.deroule-div span {
+    flex-grow: 1;
+    /* Pour que le texte prenne autant d'espace que possible */
+}
+
+.deroule-div button {
+    margin-left: auto;
+    /* Pour placer le bouton à droite */
+}
+
+.select-container {
+    text-align: center;
+    /* Centre le contenu horizontalement */
+}
+
+.select-container select {
+    width: 50%;
+    /* Définit la largeur du select à 100% de sa div parent */
+    padding: 8px;
+    /* Ajoute un peu de remplissage pour un aspect plus agréable */
+    font-size: 16px;
+    /* Taille de la police */
+    border: 1px solid #ccc;
+    /* Ajoute une bordure pour une meilleure apparence */
+    border-radius: 4px;
+    /* Ajoute un peu de bordure arrondie */
+    box-sizing: border-box;
+    /* Inclure la bordure dans la largeur et la hauteur */
+    background-color: #fff;
+    /* Couleur de fond */
+    color: #333;
+    /* Couleur du texte */
+    cursor: pointer;
+    /* Curseur de type pointeur */
+    transition: border-color 0.3s ease;
+    /* Animation de transition pour une expérience utilisateur plus fluide */
+
+    /* Ajoutez d'autres styles si nécessaire */
+}
+
+.classement-envoye {
+    background-color: #4CAF50;
+    padding: '10px';
+    border-radius: '5px'; 
+    margin-bottom: '10px';
 }

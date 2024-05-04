@@ -34,4 +34,7 @@ router.get('/:id/classement', projetController.getClassement);
 // ajouter un classement à un projet
 router.post('/:id/classement', projetController.addClassement);
 
+// supprimer un classement d'un projet
+router.delete('/:id/classement', projetController.deleteClassement);
+
 module.exports = router;
