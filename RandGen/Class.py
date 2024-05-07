@@ -1,4 +1,6 @@
 import numpy as np
+import ranky as rk
+
 
 class Project:
     nb_proj = 0
@@ -16,7 +18,8 @@ class Project:
 
     def __str__(self):
         return f"Project {self.id: >2}"
-    
+
+
 class Student:
     nb_student = 0
 
@@ -32,13 +35,14 @@ class Student:
             str += f"{p: >2} "
         str += f"\b] rank: {self.rank}"
         return str
-    
+
     def set_preference(self, preference):
         self.pref = preference
 
     def set_rank(self, rank):
         self.rank = rank
-    
+
+
 class Group:
     nb_group = 0
 
@@ -46,23 +50,43 @@ class Group:
         self.size = group_size
         self.studs = []
         self.pref = []
+        self.score = 0
         self.id = Group.nb_group
         Group.nb_group += 1
 
     def __str__(self):
-        str =  f"Group {self.id: >2} of size {self.size} of students: ["
+        str = f"Group {self.id: >2} of size {self.size} of students: ["
         for s in self.studs:
             str += f"{s.id: >2} "
         str += f"\b]"
         return str
-    
+
     def add_student(self, student):
         self.studs.append(student)
         student.groups.append(self)
-    
-    def add_pref(self, pref):
-        self.pref.append(pref)
+
+    # def add_pref(self, pref):
+    #     self.pref.append(pref)
 
     def get_rank(self):
         ranks = [s.rank for s in self.studs]
         return np.mean(ranks)
+
+    def compute_pref(self):
+        pref = np.zeros(len(self.studs[0].pref)), (len(self.studs))
+        for i in range(len(self.studs)):
+            std = self.studs[i]
+            tmp = np.zeros(len(std.pref), dtype=int)
+            for j in range(len(std.pref)):
+                pref[std.pref[j]][i] = j
+
+        print(pref)
+        # self.pref = rk.center(pref, method="kendalltau")
+        # self.pref = pref[0]
+        # for p in pref[1:]:
+        #     self.pref = rk.center([self.pref, p], method="kendalltau")
+
+    def compute_score(self):
+        self.score = 0
+        for s in self.studs:
+            self.score += s.rank

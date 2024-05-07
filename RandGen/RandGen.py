@@ -1,6 +1,7 @@
 import numpy as np
 from mallows_models import mallows_kendall as mk
 from Class import *
+import ranky as rk
 
 NB_PROJ = 15
 NB_STD = 40
@@ -16,14 +17,16 @@ def generate_projs(nb_proj=NB_PROJ, min_size=MIN_PROJ_SIZE, max_size=MAX_PROJ_SI
     projects = [Project() for _ in range(nb_proj)]
     return projects
 
+
 def generate_class(nb_class=NB_CLASS, nb_proj=NB_PROJ):
     std_class = np.zeros((nb_class, nb_proj), dtype=int)
 
     for i in range(nb_class):
         pref = np.arange(nb_proj)
         np.random.shuffle(pref)
-        std_class[i] =  pref
+        std_class[i] = pref
     return std_class
+
 
 def generate_studs_pref(classes, nb_std=NB_STD, props=None):
     studs_pref = np.array([])
@@ -32,16 +35,16 @@ def generate_studs_pref(classes, nb_std=NB_STD, props=None):
     nb_proj = classes.shape[1]
 
     if not props:
-        props = np.full(nb_class, 1/nb_class)
+        props = np.full(nb_class, 1 / nb_class)
 
     for i in range(nb_class):
-        sample = mk.sample(m=int(props[i]*nb_std), n=nb_proj, theta=1, s0=classes[i])
+        sample = mk.sample(m=int(props[i] * nb_std), n=nb_proj, theta=1, s0=classes[i])
 
         if not len(studs_pref):
             studs_pref = sample
         else:
             studs_pref = np.concatenate((studs_pref, sample), axis=0)
-    
+
     np.random.shuffle(studs_pref)
 
     for i in range(nb_std):
@@ -51,13 +54,17 @@ def generate_studs_pref(classes, nb_std=NB_STD, props=None):
 
     return studs
 
+
 def generate_stud_rank(students):
     stud_rank = np.arange(students.shape[0])
     np.random.shuffle(stud_rank)
     for i in range(students.shape[0]):
         students[stud_rank[i]].set_rank(i)
 
-def generate_groups(students, min_size=MIN_PROJ_SIZE, max_size=MAX_PROJ_SIZE, min_choices=MIN_CHOICE):
+
+def generate_groups(
+    students, min_size=MIN_PROJ_SIZE, max_size=MAX_PROJ_SIZE, min_choices=MIN_CHOICE
+):
     groups = []
 
     for std in students:
@@ -69,26 +76,26 @@ def generate_groups(students, min_size=MIN_PROJ_SIZE, max_size=MAX_PROJ_SIZE, mi
             groups.append(Group(size))
             groups[-1].add_student(std)
 
-            for i in range(size-1):
+            for i in range(size - 1):
                 std_added = False
 
-                while(not std_added):
+                while not std_added:
                     new_std = np.random.choice(students)
 
                     if new_std in groups[-1].studs:
                         continue
 
                     if len(new_std.groups) > 0:
-                        t = 1/np.exp(len(new_std.groups))
+                        t = 1 / np.exp(len(new_std.groups))
                     else:
                         t = 1
-                    n = np.random.choice([0,1], p=[1-t, t])
+                    n = np.random.choice([0, 1], p=[1 - t, t])
                     if n == 0:
                         continue
 
-                    d = 1/mk.distance(std.pref, new_std.pref)
-                    n = np.random.choice([0,1], p=[1-d, d])
-                    
+                    d = 1 / mk.distance(std.pref, new_std.pref)
+                    n = np.random.choice([0, 1], p=[1 - d, d])
+
                     if n == 1:
                         continue
 
@@ -96,6 +103,7 @@ def generate_groups(students, min_size=MIN_PROJ_SIZE, max_size=MAX_PROJ_SIZE, mi
                     std_added = True
 
     return groups
+
 
 def main(args=None):
     projects = generate_projs()
@@ -122,14 +130,24 @@ def main(args=None):
     for g in groups:
         print(g)
 
-    for s in studs:
-        str = f"std: {s.id: >2} grp: ["
-        for g in s.groups:
-            str += f"{g.id: >2} "
-        str += f"\b]"
-        print(str)
+    # for s in studs:
+    #     str = f"std: {s.id: >2} grp: ["
+    #     for g in s.groups:
+    #         str += f"{g.id: >2} "
+    #     str += f"\b]"
+    #     print(str)
 
     print(f"mean grps per std: {np.mean([len(s.groups) for s in studs]):.2f}")
+
+    # for g in groups:
+    #     g.compute_score()
+    #     print(f"grp: {g.id: >2} score: {g.score}")
+
+    for g in groups:
+        g.compute_pref()
+    #     print(f"grp: {g.id: >2} pref: {g.pref}")
+    # rk.show(studs[0].pref["judge1"])
+
 
 if __name__ == "__main__":
     main()
