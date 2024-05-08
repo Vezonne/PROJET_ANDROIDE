@@ -26,6 +26,7 @@ class Student:
     def __init__(self):
         self.groups = []
         self.rank = None
+        self.wishes = []
         self.id = Student.nb_student
         Student.nb_student += 1
 
@@ -73,18 +74,21 @@ class Group:
         return np.mean(ranks)
 
     def compute_pref(self):
-        pref = np.zeros(len(self.studs[0].pref)), (len(self.studs))
+        std_pref = np.zeros((len(self.studs[0].pref), len(self.studs)), dtype=int)
+
         for i in range(len(self.studs)):
             std = self.studs[i]
             tmp = np.zeros(len(std.pref), dtype=int)
-            for j in range(len(std.pref)):
-                pref[std.pref[j]][i] = j
 
-        print(pref)
-        # self.pref = rk.center(pref, method="kendalltau")
-        # self.pref = pref[0]
-        # for p in pref[1:]:
-        #     self.pref = rk.center([self.pref, p], method="kendalltau")
+            for j in range(len(std.pref)):
+                std_pref[std.pref[j]][i] = j + 1
+
+        pref_scores = rk.center(std_pref, method="kendalltau", verbose=False)
+
+        for _ in range(len(pref_scores)):
+            i_min = np.where(pref_scores == np.min(pref_scores))[0][0]
+            pref_scores[i_min] = np.max(pref_scores) + 1
+            self.pref.append(i_min)
 
     def compute_score(self):
         self.score = 0

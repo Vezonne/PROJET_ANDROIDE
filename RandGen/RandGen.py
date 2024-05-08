@@ -1,3 +1,4 @@
+import time
 import numpy as np
 from mallows_models import mallows_kendall as mk
 from Class import *
@@ -28,17 +29,17 @@ def generate_class(nb_class=NB_CLASS, nb_proj=NB_PROJ):
     return std_class
 
 
-def generate_studs_pref(classes, nb_std=NB_STD, props=None):
+def generate_studs_pref(classes, nb_std=NB_STD, ratio=None):
     studs_pref = np.array([])
     studs = np.zeros((nb_std), dtype=Student)
     nb_class = classes.shape[0]
     nb_proj = classes.shape[1]
 
-    if not props:
-        props = np.full(nb_class, 1 / nb_class)
+    if not ratio:
+        ratio = np.full(nb_class, 1 / nb_class)
 
     for i in range(nb_class):
-        sample = mk.sample(m=int(props[i] * nb_std), n=nb_proj, theta=1, s0=classes[i])
+        sample = mk.sample(m=int(ratio[i] * nb_std), n=nb_proj, theta=1, s0=classes[i])
 
         if not len(studs_pref):
             studs_pref = sample
@@ -105,26 +106,59 @@ def generate_groups(
     return groups
 
 
+def generate_wishes(groups):
+    np.random.shuffle(groups)
+    wishes = []
+    for g in groups:
+
+        for p in g.pref:
+            in_wishes = True
+
+            for s in g.studs:
+
+                if p in s.wishes:
+                    in_wishes = True
+                    break
+
+                in_wishes = False
+
+            if not in_wishes:
+                break
+
+        for s in g.studs:
+            s.wishes.append(p)
+            s.wishes.sorted(s.wishes, key=s.pref.index)
+
+        wishes.append(p)
+
+    return wishes
+
+
 def main(args=None):
+
+    # %% Projects
     projects = generate_projs()
     print("\nProjects:")
     for p in projects:
         print(p)
 
+    # %% Classes
     classes = generate_class()
     print("\nClasses:")
     for c in classes:
         print(c)
 
+    # %% Students
     studs = generate_studs_pref(classes)
     std_rk = generate_stud_rank(studs)
-    print("\nStudents preferences:")
+    print("\nStudent preferences:")
     for s in studs:
         # lt = []
         # for i in range(NB_CLASS):
         #     lt.append(mk.distance(classes[i], s.pref))
         print(f"{s}")
 
+    # %% Groups
     groups = generate_groups(studs)
     print("\nGroups:")
     for g in groups:
@@ -137,17 +171,32 @@ def main(args=None):
     #     str += f"\b]"
     #     print(str)
 
-    print(f"mean grps per std: {np.mean([len(s.groups) for s in studs]):.2f}")
+    print(f"average grps per std: {np.mean([len(s.groups) for s in studs]):.2f}")
 
-    # for g in groups:
-    #     g.compute_score()
-    #     print(f"grp: {g.id: >2} score: {g.score}")
-
+    # %% Group preferences
+    print(f"\nGroup preferences:")
+    t = []
     for g in groups:
+        s = time.time()
         g.compute_pref()
-    #     print(f"grp: {g.id: >2} pref: {g.pref}")
-    # rk.show(studs[0].pref["judge1"])
+        e = time.time()
+        t.append(e - s)
+        print(f"grp: {g.id: >2} pref: {g.pref}\ntemps: {e-s: .02f}")
+    print(f"total time: {np.sum(t): .02f}")
+    print(f"average time: {np.mean(t): .02f}")
+
+    # %% Group rank
+    wishes = generate_wishes(groups)
+    print("\nWishes:")
+    print(wishes)
+
+    print("\nStudent wishes:")
+    for s in studs:
+        print(f"std: {s.id: >2} wishes: {s.wishes}")
 
 
+# %% Main
 if __name__ == "__main__":
     main()
+
+# %%
