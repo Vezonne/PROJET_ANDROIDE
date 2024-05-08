@@ -14,6 +14,10 @@ const InfoSupp = () => {
   const [descriptionProjet, setDescriptionProjet] = useState('');
   const [projetNom, setProjetNom] = useState('');
   const [nomGroupe, setNomGroupe] = useState('');
+  const [numeroEtudiantError, setNumeroEtudiantError] = useState([]);
+  const numerosEtudiants = ['28710401', '28710402', '28710403'];
+
+
 
   const handleBackButton = () => {
     navigate('/classementProjets');
@@ -40,9 +44,24 @@ const InfoSupp = () => {
   }, [projetsSelectionnes, projectId, navigate]);
 
   const handleInputChange = (index, name, value) => {
+
     const newInfos = [...infos];
     newInfos[index][name] = value;
     setInfos(newInfos);
+
+    // Validation du numéro étudiant
+    if (name === 'numeroEtudiant') {
+      const isValid = numerosEtudiants.includes(value);
+      const newNumeroEtudiantError = [...numeroEtudiantError];
+
+      if (!isValid) {
+        newNumeroEtudiantError[index] = 'Numéro étudiant invalide';
+        setNumeroEtudiantError(newNumeroEtudiantError);
+      } else {
+        newNumeroEtudiantError[index] = 'Numéro étudiant valide';
+        setNumeroEtudiantError(newNumeroEtudiantError);
+      }
+    }
 
     const scoresLocalStorage = localStorage.getItem('scores');
 
@@ -52,15 +71,23 @@ const InfoSupp = () => {
 
   };
 
+
   const handleSubmit = async (e) => {
 
     e.preventDefault();
 
-    try{
+    const invalidNumeroEtudiantIndex = numeroEtudiantError.findIndex(error => error !== 'Numéro étudiant valide');
+    if (invalidNumeroEtudiantIndex !== -1) {
+      // Il existe au moins un numéro étudiant invalide
+      console.error('Au moins un numéro étudiant est invalide.');
+      return;
+    }
+
+    try {
       const response = await axios.post(`http://localhost:5000/api/projets/${projectId}/groupe/`, {
-        nom : nomGroupe,
-        score : scores[projectId],
-        candidats : infos
+        nom: nomGroupe,
+        score: scores[projectId],
+        candidats: infos
       });
       console.log('Groupe ajouté avec succès :', response.data);
 
@@ -85,7 +112,7 @@ const InfoSupp = () => {
       return; // Arrêter la fonction si les scores ne sont pas tous renseignés
     }
 
-    
+
 
     console.log('Informations soumises :', infos);
     // Réinitialiser les champs après la soumission
@@ -101,7 +128,7 @@ const InfoSupp = () => {
 
     // Marquer le projet soumis comme soumis
     const updatedProjetsSelectionnes = projetsSelectionnes.map(projet => {
-      
+
       if (projet._id === projectId) {
 
         return { ...projet, submitted: true };
@@ -169,15 +196,15 @@ const InfoSupp = () => {
 
   useEffect(() => {
     if (projetsSelectionnes && projetsSelectionnes.length > 0) {
-        const prochainProjet = projetsSelectionnes.find(projet => !projet.submitted);
-        console.log('prochainProjet :', prochainProjet);
-        if (prochainProjet) {
-            navigate(`/infoSupp/${prochainProjet._id}`);
-        } else {
-            navigate('/classementProjets');
-        }
+      const prochainProjet = projetsSelectionnes.find(projet => !projet.submitted);
+      console.log('prochainProjet :', prochainProjet);
+      if (prochainProjet) {
+        navigate(`/infoSupp/${prochainProjet._id}`);
+      } else {
+        navigate('/classementProjets');
+      }
     }
-}, [projetsSelectionnes]);
+  }, [projetsSelectionnes]);
 
 
   return (
@@ -190,7 +217,7 @@ const InfoSupp = () => {
             <br />
             Vous devez cependant etre au moins la capacité minimum du projet pour pouvoir postuler, sinon vous ne serez pas pris en compte.
             <br />
-            ATTENTION : se mettre dans participant n°1, pour que le score associé soit le bon. 
+            ATTENTION : se mettre dans participant n°1, pour que le score associé soit le bon.
           </p>
           <h2>Description du projet :  </h2>
           <p>{descriptionProjet}</p>
@@ -236,6 +263,11 @@ const InfoSupp = () => {
                         onChange={(e) => handleInputChange(index, 'numeroEtudiant', e.target.value)}
                         required
                       />
+                      {numeroEtudiantError[index] && (
+                        <span style={{ color: numeroEtudiantError[index] === 'Numéro étudiant valide' ? 'green' : 'red' }}>
+                          {numeroEtudiantError[index]}
+                        </span>
+                      )}
                     </label>
                     <br />
                     <label>
