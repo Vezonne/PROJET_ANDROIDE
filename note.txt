@@ -1,0 +1,4 @@
+un moyen de d'avoir une liste de groupe et des étudiants associé à ces groupes et un moyen d'avoir le projet auquel le groupe à postulé
+la liste des étudiant et leur voeux avec le classement de leur voeux.
+la liste des projets avec les groupes qui ont postulé et leur classement par leur encadrant
+

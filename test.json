@@ -1,0 +1,91 @@
+{
+    "_id": {
+        "$oid": "66338554c987cca55fb1a8d3"
+    },
+    "responsable": "test",
+    "capaciteMin": 3,
+    "capaciteMax": 3,
+    "nom": "test",
+    "description": "test",
+    "informationsSupplementaires": "test",
+    "submitted": false,
+    "groupes": [
+        {
+            "nom": "tset",
+            "score": "1",
+            "candidats": [
+                {
+                    "nom": "tset",
+                    "prenom": "tset",
+                    "email": "tset",
+                    "numeroEtudiant": "tset",
+                    "_id": {
+                        "$oid": "663385c1c987cca55fb1a8dd"
+                    }
+                },
+                {
+                    "nom": "tset",
+                    "prenom": "tset",
+                    "email": "tset",
+                    "numeroEtudiant": "tset",
+                    "_id": {
+                        "$oid": "663385c1c987cca55fb1a8de"
+                    }
+                },
+                {
+                    "nom": "tset",
+                    "prenom": "tsett",
+                    "email": "tset",
+                    "numeroEtudiant": "tset",
+                    "_id": {
+                        "$oid": "663385c1c987cca55fb1a8df"
+                    }
+                }
+            ],
+            "_id": {
+                "$oid": "663385c1c987cca55fb1a8dc"
+            }
+        },
+        {
+            "nom": "groupe 2",
+            "score": "",
+            "candidats": [
+                {
+                    "nom": "groupe 2",
+                    "prenom": "groupe 2",
+                    "email": "groupe 2",
+                    "numeroEtudiant": "groupe 2",
+                    "_id": {
+                        "$oid": "66360a4731ca63599d87ef86"
+                    }
+                },
+                {
+                    "nom": "groupe 2",
+                    "prenom": "groupe 2",
+                    "email": "groupe 2",
+                    "numeroEtudiant": "groupe 2",
+                    "_id": {
+                        "$oid": "66360a4731ca63599d87ef87"
+                    }
+                },
+                {
+                    "nom": "groupe 2",
+                    "prenom": "groupe 2",
+                    "email": "groupe 2",
+                    "numeroEtudiant": "groupe 2",
+                    "_id": {
+                        "$oid": "66360a4731ca63599d87ef88"
+                    }
+                }
+            ],
+            "_id": {
+                "$oid": "66360a4731ca63599d87ef85"
+            }
+        }
+    ],
+    "__v": 4,
+    "classement": {
+        "663385c1c987cca55fb1a8dc": "1",
+        "66360a4731ca63599d87ef85": "2"
+    }
+}
