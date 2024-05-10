@@ -97,7 +97,7 @@ module.exports.getAllGroupesCandidats = async (req, res) => {
 
 module.exports.addGroupeCandidats = async (req, res) => {
     const {id} = req.params;
-    const {nom, candidats, score} = req.body;
+    const {nom, candidats, rang} = req.body;
     try {
         const projet = await ProjetModel.findById(id);
         if (!projet) {
@@ -106,7 +106,7 @@ module.exports.addGroupeCandidats = async (req, res) => {
     
     const nouveauGroupe = {
         nom,
-        score,
+        rang,
         candidats
     };
     projet.groupes.push(nouveauGroupe);

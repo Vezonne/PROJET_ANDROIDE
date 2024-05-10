@@ -86,7 +86,7 @@ const Toolbar = ({count, modifierVal}) => {
                   <li key={projet._id} className='toolbar-item-disable'>
 
                       <span className='link-disable'>
-                      {projet.nom} - Score : {scores[projet._id]}
+                      {projet.nom} - Rang : {scores[projet._id]}
                       </span> 
                       <button className='toolbar-button' type="button" onClick={() => handleRemoveProject(projet._id)}>Supprimer</button>
 
@@ -94,11 +94,11 @@ const Toolbar = ({count, modifierVal}) => {
                 ) : (
                   <li key={projet._id} className='toolbar-item'>
                       <NavLink className='info-sup-link' to={`/infoSupp/${projet._id}`}>
-                      {projet.nom} - Score :
+                      {projet.nom} - Rang :
                       </NavLink>
                     
                       <select className='projet-select' value={scores[projet._id] || ''} onChange={(e) => handleScoreChange(projet._id, e.target.value)}>
-                        <option value="">Sélectionnez un score</option>
+                        <option value="">Sélectionnez un rang</option>
                         {Array.from({ length: projetsSelectionnes.length }, (_, i) => i + 1).map(score => (
                           <option key={score} value={score}>{score}</option>
                         ))}

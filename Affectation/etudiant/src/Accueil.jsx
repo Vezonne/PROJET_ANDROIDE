@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Accueil.css'
 import axios from 'axios';
 
 function Accueil() {
+
+  const [projets, setProjets] = useState([]);
 
   const handleBack = async () => {
     try {
@@ -15,6 +17,28 @@ function Accueil() {
     }
     localStorage.clear();
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/projets');
+        setProjets(response.data);
+        console.log('Projets récupérés:', response.data);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des projets:', error);
+      }
+    };
+    fetchData();
+
+    projets.forEach(projet => {
+      if (projet.submitted === true) {
+        projet.submitted = false;
+      }
+    });
+  });
+
+
+
 
   return (
     <div className='accueil-container'>

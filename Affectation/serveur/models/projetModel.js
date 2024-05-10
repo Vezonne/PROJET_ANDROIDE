@@ -13,7 +13,7 @@ const CandidatSchema = new mongoose.Schema({
 // Schéma pour un groupe
 const GroupeSchema = new mongoose.Schema({
   nom: String,
-  score : String,
+  rang : String,
   candidats: [CandidatSchema] // Liste de candidats dans ce groupe
 });
 

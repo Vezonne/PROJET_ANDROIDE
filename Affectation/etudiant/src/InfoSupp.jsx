@@ -86,7 +86,7 @@ const InfoSupp = () => {
     try {
       const response = await axios.post(`http://localhost:5000/api/projets/${projectId}/groupe/`, {
         nom: nomGroupe,
-        score: scores[projectId],
+        rang: scores[projectId],
         candidats: infos
       });
       console.log('Groupe ajouté avec succès :', response.data);

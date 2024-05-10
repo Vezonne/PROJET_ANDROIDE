@@ -8,7 +8,7 @@ const ClassementEtudiant = () => {
     const [expandedProjets, setExpandedProjets] = useState({});
     const [expandedCandidats, setExpandedCandidats] = useState({});
     const [projetsClassementEnvoye, setProjetsClassementEnvoye] = useState({});
-
+    const groupeUnique = [];
 
     useEffect(() => {
         const fetchData = async () => {
@@ -124,14 +124,14 @@ const ClassementEtudiant = () => {
             <div className='instructions-div'>
                 <p>Vous pouvez affecter un classement sur les groupes qui ont candidatés à votre projet.</p>
                 <p>Quelques instructions :</p>
-                    <ul>
-                        <li>Vous devez affecter un rang à chaque groupe qui a candidaté à votre projet pour envoyer.</li>
-                        <li>Vous ne pouvez pas affecter le même rang à plusieurs groupes.</li>
-                        <li>Vous pouvez cliquer sur la fleche à côté du nom du projet pour voir les groupes qui ont candidaté à ce projet.</li>
-                        <li>Vous pouvez cliquer sur la fleche à côté du nom du groupe pour voir les candidats de ce groupe.</li>
-                        <li>Une fois votre classement envoyé, il sera impossible de le modifier.</li>
-                    </ul>
-                
+                <ul>
+                    <li>Vous devez affecter un rang à chaque groupe qui a candidaté à votre projet pour envoyer.</li>
+                    <li>Vous ne pouvez pas affecter le même rang à plusieurs groupes.</li>
+                    <li>Vous pouvez cliquer sur la fleche à côté du nom du projet pour voir les groupes qui ont candidaté à ce projet.</li>
+                    <li>Vous pouvez cliquer sur la fleche à côté du nom du groupe pour voir les candidats de ce groupe.</li>
+                    <li>Une fois votre classement envoyé, il sera impossible de le modifier.</li>
+                </ul>
+
             </div>
             <ul className="projets-list">
                 {projets.map(projet => (
@@ -143,56 +143,67 @@ const ClassementEtudiant = () => {
                             </div>
                         ) : (
 
-                        <div>
-                            <div className='deroule-div'>
-                                <span>{projet.nom}. Encadrant : {projet.responsable}</span>
-                                <button onClick={() => toggleProjetExpansion(projet._id)} style={{ cursor: 'pointer' }}>
-                                    {expandedProjets[projet._id] ? '↑' : '↓'}
-                                </button>
-                            </div>
-
-
-                            {expandedProjets[projet._id] && (
-                                <ul className="groupes-list">
-                                    {projet.groupes.map(groupe => (
-                                        <li key={groupe._id}>
-                                            <span>{groupe.nom}</span>
-                                            <div className='select-container'>
-                                                <select
-                                                    value={classement[projet._id]?.[groupe._id] || ''}
-                                                    onChange={e => handleScoreChange(projet._id, groupe._id, e.target.value)}
-                                                >
-                                                    <option value="">Sélectionner un rang</option>
-                                                    {[...Array(projet.groupes.length).keys()].map(score => (
-                                                        <option key={score + 1} value={score + 1}>{score + 1}</option>
-                                                    ))}
-                                                </select>
-                                            </div>
-                                            <button onClick={() => toggleGroupeExpansion(projet._id, groupe._id)} style={{ cursor: 'pointer' }}>
-                                                {expandedCandidats[`${projet._id}_${groupe._id}`] ? '↑' : '↓'}
-                                            </button>
-                                            {expandedCandidats[`${projet._id}_${groupe._id}`] && (
-                                                <ul>
-                                                    {groupe.candidats.map(candidat => (
-                                                        <li key={candidat._id}>
-                                                            {candidat.nom} {candidat.prenom} ({candidat.numeroEtudiant})
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            )}
-                                        </li>
-                                    ))}
-                                    <button
-                                        className='submit-button'
-                                        onClick={() => handleSubmit(projet)}
-                                        disabled={!checkScores(projet)}
-                                    >
-                                        Envoyer
+                            <div>
+                                <div className='deroule-div'>
+                                    <span>{projet.nom}. Encadrant : {projet.responsable}</span>
+                                    <button onClick={() => toggleProjetExpansion(projet._id)} style={{ cursor: 'pointer' }}>
+                                        {expandedProjets[projet._id] ? '↑' : '↓'}
                                     </button>
-                                </ul>
+                                </div>
 
-                            )}
-                        </div>
+
+                                {expandedProjets[projet._id] && projet.groupes.length !== 0 && (
+                                    <ul className="groupes-list">
+                                        {projet.groupes.map(groupe => {
+                                            
+                                            if (groupeUnique.includes(groupe.nom)) {
+                                                return null;
+                                            }
+                                            else {
+                                                groupeUnique.push(groupe.nom);
+                                            }
+
+                                            return (
+
+                                                <li key={groupe._id}>
+                                                    <span>{groupe.nom}</span>
+                                                    <div className='select-container'>
+                                                        <select
+                                                            value={classement[projet._id]?.[groupe._id] || ''}
+                                                            onChange={e => handleScoreChange(projet._id, groupe._id, e.target.value)}
+                                                        >
+                                                            <option value="">Sélectionner un rang</option>
+                                                            {[...Array(projet.groupes.length).keys()].map(score => (
+                                                                <option key={score + 1} value={score + 1}>{score + 1}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                    <button onClick={() => toggleGroupeExpansion(projet._id, groupe._id)} style={{ cursor: 'pointer' }}>
+                                                        {expandedCandidats[`${projet._id}_${groupe._id}`] ? '↑' : '↓'}
+                                                    </button>
+                                                    {expandedCandidats[`${projet._id}_${groupe._id}`] && (
+                                                        <ul>
+                                                            {groupe.candidats.map(candidat => (
+                                                                <li key={candidat._id}>
+                                                                    {candidat.nom} {candidat.prenom} ({candidat.numeroEtudiant})
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    )}
+                                                </li>
+                                            );
+                                        })}
+                                        <button
+                                            className='submit-button'
+                                            onClick={() => handleSubmit(projet)}
+                                            disabled={!checkScores(projet)}
+                                        >
+                                            Envoyer
+                                        </button>
+                                    </ul>
+
+                                )}
+                            </div>
                         )}
                     </li>
 
