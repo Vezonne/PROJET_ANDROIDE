@@ -1,0 +1,128 @@
+[{
+  "_id": {
+    "$oid": "663e09ef0b938ed7cdf7e570"
+  },
+  "responsable": "Prof 1",
+  "capaciteMin": 2,
+  "capaciteMax": 2,
+  "nom": "Projet dev web",
+  "description": "developpement web",
+  "informationsSupplementaires": "",
+  "submitted": false,
+  "groupes": [
+    {
+      "nom": "Groupe 1",
+      "rang": "1",
+      "candidats": [
+        {
+          "nom": "du",
+          "prenom": "jean",
+          "email": "jean",
+          "numeroEtudiant": "28710402",
+          "_id": {
+            "$oid": "663e0a890b938ed7cdf7e57d"
+          }
+        },
+        {
+          "nom": "du",
+          "prenom": "jacques",
+          "email": "jacques",
+          "numeroEtudiant": "28710403",
+          "_id": {
+            "$oid": "663e0a890b938ed7cdf7e57e"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "663e0a890b938ed7cdf7e57c"
+      }
+    },
+    {
+      "nom": "Groupe 2",
+      "rang": "1",
+      "candidats": [
+        {
+          "nom": "Groupe 2",
+          "prenom": "Groupe 2",
+          "email": "Groupe 2",
+          "numeroEtudiant": "28710402",
+          "_id": {
+            "$oid": "663e0cca0b938ed7cdf7e599"
+          }
+        },
+        {
+          "nom": "Groupe 2",
+          "prenom": "Groupe 2",
+          "email": "Groupe 2",
+          "numeroEtudiant": "28710402",
+          "_id": {
+            "$oid": "663e0cca0b938ed7cdf7e59a"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "663e0cca0b938ed7cdf7e598"
+      }
+    },
+    {
+      "nom": "Groupe 1",
+      "rang": "2",
+      "candidats": [
+        {
+          "nom": "du",
+          "prenom": "jacques",
+          "email": "jacques",
+          "numeroEtudiant": "28710403",
+          "_id": {
+            "$oid": "663e0d380b938ed7cdf7e710"
+          }
+        },
+        {
+          "nom": "du",
+          "prenom": "jean",
+          "email": "jean",
+          "numeroEtudiant": "28710402",
+          "_id": {
+            "$oid": "663e0d380b938ed7cdf7e711"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "663e0d380b938ed7cdf7e70f"
+      }
+    }
+  ],
+  "classement": {},
+  "__v": 3
+},
+{
+  "_id": {
+    "$oid": "663e0a000b938ed7cdf7e573"
+  },
+  "responsable": "Prof 2",
+  "capaciteMin": 3,
+  "capaciteMax": 3,
+  "nom": "IA",
+  "description": "IA pour la medecine",
+  "informationsSupplementaires": "",
+  "submitted": false,
+  "groupes": [],
+  "classement": {},
+  "__v": 0
+},
+
+{
+  "_id": {
+    "$oid": "663e0a2a0b938ed7cdf7e576"
+  },
+  "responsable": "Prof 3",
+  "capaciteMin": 3,
+  "capaciteMax": 4,
+  "nom": "IA jeux",
+  "description": "IA dans les jeux",
+  "informationsSupplementaires": "",
+  "submitted": false,
+  "groupes": [],
+  "classement": {},
+  "__v": 0
+}]
