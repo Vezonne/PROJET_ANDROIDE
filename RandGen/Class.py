@@ -12,6 +12,10 @@ class Project:
         Project.min_size = min
         Project.max_size = max
 
+    @staticmethod
+    def clear_nb_project():
+        Project.nb_proj = 0
+
     def __init__(self):
         self.id = Project.nb_proj
         self.pref = []
@@ -26,6 +30,10 @@ class Project:
 
 class Student:
     nb_student = 0
+
+    @staticmethod
+    def clear_nb_student():
+        Student.nb_student = 0
 
     def __init__(self):
         self.groups = []
@@ -51,6 +59,10 @@ class Student:
 class Group:
     nb_group = 0
 
+    @staticmethod
+    def clear_nb_group():
+        Group.nb_group = 0
+
     def __init__(self, group_size):
         self.size = group_size
         self.studs = []
@@ -69,9 +81,6 @@ class Group:
     def add_student(self, student):
         self.studs.append(student)
         student.groups.append(self)
-
-    # def add_pref(self, pref):
-    #     self.pref.append(pref)
 
     def get_rank(self):
         ranks = [s.rank for s in self.studs]

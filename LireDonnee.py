@@ -2,91 +2,100 @@ import json
 from operator import indexOf
 from turtle import clear
 
-from designer import group 
-
+# from designer import group
 
 
 def recupJSON(file):
     with open(file) as f:
-        data=json.load(f)
+        data = json.load(f)
     return data
 
 
-data= recupJSON('bdd.json')
+data = recupJSON("bdd.json")
+
 
 def recupProjet(data):
 
-    Liste_Projet={}
-    for i in range (len(data)):
-        Liste_Projet['Projet '+str(i)]=groupeProjet(data[i])
+    Liste_Projet = {}
+    for i in range(len(data)):
+        Liste_Projet["Projet " + str(i)] = groupeProjet(data[i])
 
     return Liste_Projet
 
+
 def groupeProjet(projet):
 
-    liste_grp=[]
+    liste_grp = []
 
-    classement=[]
-    for c in projet['classement']:
-        if projet['classement'][c]!='':
-            rang=(int(projet['classement'][c]),c)
+    classement = []
+    for c in projet["classement"]:
+        if projet["classement"][c] != "":
+            rang = (int(projet["classement"][c]), c)
             classement.append(rang)
 
-    r=1
-    while len(classement)!=0:
-        
-        for rang,id in classement:
-            if rang==r:
-                choisi=id
-        
-        for g in projet['groupes']:
-            if g['nom'] not in liste_grp and g['_id']['$oid']==choisi:
-                liste_grp.append(g['nom'])
-        classement.remove((r,choisi))
+    r = 1
+    while len(classement) != 0:
 
-        r+=1
+        for rang, id in classement:
+            if rang == r:
+                choisi = id
+
+        for g in projet["groupes"]:
+            if g["nom"] not in liste_grp and g["_id"]["$oid"] == choisi:
+                liste_grp.append(g["nom"])
+        classement.remove((r, choisi))
+
+        r += 1
     return liste_grp
 
+
 def recupGroupe(data):
-    grp={}
-    j=0
-    for i in range (len(data)):
-        dict_groupes={}
-        for g in data[i]['groupes']:
-            set_temporaire=set()
-            for e in g['candidats']:
-                set_temporaire.add(e['numeroEtudiant'])
-            occur=False
+    grp = {}
+    j = 0
+    for i in range(len(data)):
+        dict_groupes = {}
+        for g in data[i]["groupes"]:
+            set_temporaire = set()
+            for e in g["candidats"]:
+                set_temporaire.add(e["numeroEtudiant"])
+            occur = False
             for k in dict_groupes:
                 if set_temporaire == dict_groupes[k]:
-                    occur=True
+                    occur = True
             if not occur:
-                dict_groupes['Groupe '+str(j)]=set_temporaire
-                j+=1
+                dict_groupes["Groupe " + str(j)] = set_temporaire
+                j += 1
         grp.update(dict_groupes)
 
     return grp
 
+
 def recupEtudiant(data):
-    etu={}
-    
-    list_etu=[]
+    etu = {}
 
-    for i in range (len(data)):
-        for g in data[i]['groupes']:
-            list_etu.append((g['candidats'][0]['numeroEtudiant'], 'Projet '+str(i),int(g['rang'])))
-    
-    while len(list_etu)!=0:
-        choisi=list_etu[0]
-        if choisi[2]==1:
-            etu[choisi[0]]=[choisi[1]]
-        if choisi[2]>1:
-            for i in range (1,len(list_etu)):
-                if list_etu[i][0]==choisi[0] and list_etu[i][2]<choisi[2]:
-                    choisi=list_etu[i]
+    list_etu = []
 
-            if choisi[2]==1:
-                etu[choisi[0]]=[choisi[1]]
+    for i in range(len(data)):
+        for g in data[i]["groupes"]:
+            list_etu.append(
+                (
+                    g["candidats"][0]["numeroEtudiant"],
+                    "Projet " + str(i),
+                    int(g["rang"]),
+                )
+            )
+
+    while len(list_etu) != 0:
+        choisi = list_etu[0]
+        if choisi[2] == 1:
+            etu[choisi[0]] = [choisi[1]]
+        if choisi[2] > 1:
+            for i in range(1, len(list_etu)):
+                if list_etu[i][0] == choisi[0] and list_etu[i][2] < choisi[2]:
+                    choisi = list_etu[i]
+
+            if choisi[2] == 1:
+                etu[choisi[0]] = [choisi[1]]
             else:
                 etu[choisi[0]].append(choisi[1])
 
@@ -95,13 +104,8 @@ def recupEtudiant(data):
     return etu
 
 
-
-
-            
-
-
-test=groupeProjet(data[0])
-l=recupProjet(data)
-g=recupGroupe(data)
-e=recupEtudiant(data)
+test = groupeProjet(data[0])
+l = recupProjet(data)
+g = recupGroupe(data)
+e = recupEtudiant(data)
 print(l)

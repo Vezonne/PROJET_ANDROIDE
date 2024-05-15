@@ -1,15 +1,13 @@
 # %%
-import threading
 import time
 import numpy as np
 from mallows_models import mallows_kendall as mk
 from tqdm import tqdm
 from Class import *
-import ranky as rk
 import json
 
-NB_PROJ = 7
-NB_STD = 15
+NB_PROJ = 15
+NB_STD = 40
 NB_CLASS = 4
 MIN_PROJ_SIZE = 2
 MAX_PROJ_SIZE = 4
@@ -163,7 +161,7 @@ def generate_proj_pref(projects, wishes, groups):
     return pref
 
 
-def store_data(stds, grps, prjs):
+def store_data(stds, grps, prjs, file_name="RandGen/data/data.json"):
     data = {}
     data["students"] = []
     data["groups"] = []
@@ -188,17 +186,21 @@ def store_data(stds, grps, prjs):
         data["projects"].append(prj)
 
     def default(o):
-        if isinstance(o, np.int64):
+        if isinstance(o, np.int64):  # type: ignore
             return int(o)
         raise TypeError
 
-    with open("RandGen/data/data.json", "w") as f:
+    with open(file_name, "x") as f:
         json.dump(data, f, default=default)
 
     return data
 
 
-def main(args=None):
+def gen_data(file_name="RandGen/data/data.json"):
+
+    Student.clear_nb_student()
+    Group.clear_nb_group()
+    Project.clear_nb_project()
 
     # %% Projects
     projects = generate_projs()
@@ -267,13 +269,19 @@ def main(args=None):
     # %% Project preferences
     pref = generate_proj_pref(projects, wishes, groups)
     print("\nProject preferences:")
-    print(pref)
+    # print(pref)
     for p in projects:
-        print(f"proj: {p.id} pref: {p.pref}")
+        print(f"proj: {p.id: >2} pref: {p.pref}")
 
     # %% Store data
-    data = store_data(studs, groups, projects)
+    data = store_data(studs, groups, projects, file_name)
     print("\nData stored in data.json")
+
+
+def main(args=None):
+
+    for i in range(10):
+        gen_data(file_name=f"RandGen/data/data{i}.json")
 
 
 # %% Main
