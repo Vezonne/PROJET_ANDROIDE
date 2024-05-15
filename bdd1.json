@@ -1,5 +1,4 @@
-[
-{
+[{
   "_id": {
     "$oid": "663e09ef0b938ed7cdf7e570"
   },
@@ -93,15 +92,9 @@
       }
     }
   ],
-  "classement": {
-    "663e0a890b938ed7cdf7e57c": "2",
-    "663e0cca0b938ed7cdf7e598": "1",
-    "663e0d380b938ed7cdf7e70f": ""
-  },
+  "classement": {},
   "__v": 3
 },
-
-
 {
   "_id": {
     "$oid": "663e0a000b938ed7cdf7e573"
@@ -113,41 +106,36 @@
   "description": "IA pour la medecine",
   "informationsSupplementaires": "",
   "submitted": false,
-  "groupes": [
-    {
-      "nom": "Groupe 1",
-      "rang": "2",
-      "candidats": [
-        {
-          "nom": "du",
-          "prenom": "jean",
-          "email": "jean",
-          "numeroEtudiant": "28710402",
-          "_id": {
-            "$oid": "663e0a890b938ed7cdf7e57d"
-          }
-        },
-        {
-          "nom": "du",
-          "prenom": "jacques",
-          "email": "jacques",
-          "numeroEtudiant": "28710403",
-          "_id": {
-            "$oid": "663e0a890b938ed7cdf7e57e"
-          }
+  "groupes": [{
+    "nom": "Groupe 1",
+    "rang": "2",
+    "candidats": [
+      {
+        "nom": "du",
+        "prenom": "jean",
+        "email": "jean",
+        "numeroEtudiant": "28710402",
+        "_id": {
+          "$oid": "663e0a890b938ed7cdf7e57d"
         }
-      ],
-      "_id": {
-        "$oid": "663e0a890b938ed7cdf7e57c"
+      },
+      {
+        "nom": "du",
+        "prenom": "jacques",
+        "email": "jacques",
+        "numeroEtudiant": "28710403",
+        "_id": {
+          "$oid": "663e0a890b938ed7cdf7e57e"
+        }
       }
+    ],
+    "_id": {
+      "$oid": "663e0a890b938ed7cdf7e57c"
     }
-  ],
-  "classement": {
-    "663e0a890b938ed7cdf7e57c": "1"
-  },
-  "__v": 1
+  }],
+  "classement": {},
+  "__v": 0
 },
-
 
 {
   "_id": {
@@ -160,39 +148,33 @@
   "description": "IA dans les jeux",
   "informationsSupplementaires": "",
   "submitted": false,
-  "groupes": [
-    {
-      "nom": "Groupe 1",
-      "rang": "1",
-      "candidats": [
-        {
-          "nom": "du",
-          "prenom": "jacques",
-          "email": "jacques",
-          "numeroEtudiant": "28710403",
-          "_id": {
-            "$oid": "663e0d380b938ed7cdf7e710"
-          }
-        },
-        {
-          "nom": "du",
-          "prenom": "jean",
-          "email": "jean",
-          "numeroEtudiant": "28710402",
-          "_id": {
-            "$oid": "663e0d380b938ed7cdf7e711"
-          }
+  "groupes": [{
+    "nom": "Groupe 1",
+    "rang": "1",
+    "candidats": [
+      {
+        "nom": "du",
+        "prenom": "jacques",
+        "email": "jacques",
+        "numeroEtudiant": "28710403",
+        "_id": {
+          "$oid": "663e0d380b938ed7cdf7e710"
         }
-      ],
-      "_id": {
-        "$oid": "663e0d380b938ed7cdf7e70f"
+      },
+      {
+        "nom": "du",
+        "prenom": "jean",
+        "email": "jean",
+        "numeroEtudiant": "28710402",
+        "_id": {
+          "$oid": "663e0d380b938ed7cdf7e711"
+        }
       }
+    ],
+    "_id": {
+      "$oid": "663e0d380b938ed7cdf7e70f"
     }
-  ],
-  "classement": {
-    "663e0d380b938ed7cdf7e70f": "1"
-  },
-  "__v": 1
-}
-
-]
+  }],
+  "classement": {},
+  "__v": 0
+}]

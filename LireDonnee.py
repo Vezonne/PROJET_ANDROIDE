@@ -1,4 +1,5 @@
 import json
+from operator import indexOf
 from turtle import clear
 
 from designer import group 
@@ -25,9 +26,25 @@ def groupeProjet(projet):
 
     liste_grp=[]
 
-    for g in projet['groupes']:
-        if g['nom'] not in liste_grp:
-            liste_grp.append(g['nom'])
+    classement=[]
+    for c in projet['classement']:
+        if projet['classement'][c]!='':
+            rang=(int(projet['classement'][c]),c)
+            classement.append(rang)
+
+    r=1
+    while len(classement)!=0:
+        
+        for rang,id in classement:
+            if rang==r:
+                choisi=id
+        
+        for g in projet['groupes']:
+            if g['nom'] not in liste_grp and g['_id']['$oid']==choisi:
+                liste_grp.append(g['nom'])
+        classement.remove((r,choisi))
+
+        r+=1
     return liste_grp
 
 def recupGroupe(data):
@@ -83,8 +100,8 @@ def recupEtudiant(data):
             
 
 
-
+test=groupeProjet(data[0])
 l=recupProjet(data)
 g=recupGroupe(data)
 e=recupEtudiant(data)
-print(e)
+print(l)
