@@ -14,10 +14,14 @@ class Project:
 
     def __init__(self):
         self.id = Project.nb_proj
+        self.pref = []
         Project.nb_proj += 1
 
     def __str__(self):
         return f"Project {self.id: >2}"
+
+    def set_pref(self, preferences):
+        self.pref = preferences
 
 
 class Student:

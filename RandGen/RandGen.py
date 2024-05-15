@@ -6,9 +6,10 @@ from mallows_models import mallows_kendall as mk
 from tqdm import tqdm
 from Class import *
 import ranky as rk
+import json
 
-NB_PROJ = 15
-NB_STD = 40
+NB_PROJ = 7
+NB_STD = 15
 NB_CLASS = 4
 MIN_PROJ_SIZE = 2
 MAX_PROJ_SIZE = 4
@@ -42,7 +43,11 @@ def generate_studs_pref(classes, nb_std=NB_STD, ratio=None):
         ratio = np.full(nb_class, 1 / nb_class)
 
     for i in range(nb_class):
-        sample = mk.sample(m=int(ratio[i] * nb_std), n=nb_proj, theta=1, s0=classes[i])
+        sample_size = round(ratio[i] * nb_std)
+        if sample_size > (nb_std - len(studs_pref)):
+            sample_size = nb_std - len(studs_pref)
+
+        sample = mk.sample(m=sample_size, n=nb_proj, theta=1, s0=classes[i])
 
         if not len(studs_pref):
             studs_pref = sample
@@ -97,7 +102,10 @@ def generate_groups(
                     if n == 0:
                         continue
 
-                    d = 1 / mk.distance(std.pref, new_std.pref)
+                    if mk.distance(std.pref, new_std.pref) == 0:
+                        d = 0
+                    else:
+                        d = 1 / mk.distance(std.pref, new_std.pref)
                     n = np.random.choice([0, 1], p=[1 - d, d])
 
                     if n == 1:
@@ -139,21 +147,55 @@ def generate_wishes(groups):
 
 def generate_proj_pref(projects, wishes, groups):
     pref = {}
-    rank = {}
 
     for p in projects:
         pref[p.id] = []
-        rank[p.id] = []
+
     for g, w in wishes.items():
-        pref[w].append(g)
-        rank[w].append(groups[g].get_rank())
+        pref[w].append((groups[g].get_rank(), g))
+
     for p in projects:
         if pref[p.id] != []:
-            pref[p.id].sort(key=rank[p.id].index, reverse=True)
+            pref[p.id] = sorted(pref[p.id])
+            p.set_pref([grp for scr, grp in pref[p.id]])
         else:
             pref.pop(p.id)
-            rank.pop(p.id)
     return pref
+
+
+def store_data(stds, grps, prjs):
+    data = {}
+    data["students"] = []
+    data["groups"] = []
+    data["projects"] = []
+
+    for s in stds:
+        std = {}
+        std["id"] = s.id
+        std["wishes"] = s.wishes
+        data["students"].append(std)
+
+    for g in grps:
+        grp = {}
+        grp["id"] = g.id
+        grp["students"] = [s.id for s in g.studs]
+        data["groups"].append(grp)
+
+    for p in prjs:
+        prj = {}
+        prj["id"] = p.id
+        prj["preferences"] = p.pref
+        data["projects"].append(prj)
+
+    def default(o):
+        if isinstance(o, np.int64):
+            return int(o)
+        raise TypeError
+
+    with open("RandGen/data/data.json", "w") as f:
+        json.dump(data, f, default=default)
+
+    return data
 
 
 def main(args=None):
@@ -226,8 +268,12 @@ def main(args=None):
     pref = generate_proj_pref(projects, wishes, groups)
     print("\nProject preferences:")
     print(pref)
-    # for p in pref:
-    #     print(f"proj: {p.id} pref: {pref[p]}")
+    for p in projects:
+        print(f"proj: {p.id} pref: {p.pref}")
+
+    # %% Store data
+    data = store_data(studs, groups, projects)
+    print("\nData stored in data.json")
 
 
 # %% Main
