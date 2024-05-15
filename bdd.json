@@ -45,7 +45,7 @@
           "nom": "Groupe 2",
           "prenom": "Groupe 2",
           "email": "Groupe 2",
-          "numeroEtudiant": "28710402",
+          "numeroEtudiant": "28710404",
           "_id": {
             "$oid": "663e0cca0b938ed7cdf7e599"
           }
@@ -54,7 +54,7 @@
           "nom": "Groupe 2",
           "prenom": "Groupe 2",
           "email": "Groupe 2",
-          "numeroEtudiant": "28710402",
+          "numeroEtudiant": "28710405",
           "_id": {
             "$oid": "663e0cca0b938ed7cdf7e59a"
           }
@@ -106,7 +106,33 @@
   "description": "IA pour la medecine",
   "informationsSupplementaires": "",
   "submitted": false,
-  "groupes": [],
+  "groupes": [{
+    "nom": "Groupe 1",
+    "rang": "2",
+    "candidats": [
+      {
+        "nom": "du",
+        "prenom": "jean",
+        "email": "jean",
+        "numeroEtudiant": "28710402",
+        "_id": {
+          "$oid": "663e0a890b938ed7cdf7e57d"
+        }
+      },
+      {
+        "nom": "du",
+        "prenom": "jacques",
+        "email": "jacques",
+        "numeroEtudiant": "28710403",
+        "_id": {
+          "$oid": "663e0a890b938ed7cdf7e57e"
+        }
+      }
+    ],
+    "_id": {
+      "$oid": "663e0a890b938ed7cdf7e57c"
+    }
+  }],
   "classement": {},
   "__v": 0
 },
@@ -122,7 +148,33 @@
   "description": "IA dans les jeux",
   "informationsSupplementaires": "",
   "submitted": false,
-  "groupes": [],
+  "groupes": [{
+    "nom": "Groupe 1",
+    "rang": "1",
+    "candidats": [
+      {
+        "nom": "du",
+        "prenom": "jacques",
+        "email": "jacques",
+        "numeroEtudiant": "28710403",
+        "_id": {
+          "$oid": "663e0d380b938ed7cdf7e710"
+        }
+      },
+      {
+        "nom": "du",
+        "prenom": "jean",
+        "email": "jean",
+        "numeroEtudiant": "28710402",
+        "_id": {
+          "$oid": "663e0d380b938ed7cdf7e711"
+        }
+      }
+    ],
+    "_id": {
+      "$oid": "663e0d380b938ed7cdf7e70f"
+    }
+  }],
   "classement": {},
   "__v": 0
 }]
