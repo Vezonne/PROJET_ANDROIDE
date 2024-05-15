@@ -2,3 +2,6 @@ un moyen de d'avoir une liste de groupe et des étudiants associé à ces groupe
 la liste des étudiant et leur voeux avec le classement de leur voeux.
 la liste des projets avec les groupes qui ont postulé et leur classement par leur encadrant
 
+{'Projet 0': ['Groupe 0', 'Groupe 2'], 'Projet 1': ['Groupe 1', 'Groupe 2']}
+{'Groupe 0': ['Etudiant 0', 'Etudiant 1'], 'Groupe 1': ['Etudiant 0', 'Etudiant 2'], 'Groupe 2': ['Etudiant 3', 'Etudiant 4']}
+{'Etudiant 0': ['Projet 0', 'Projet 1'], 'Etudiant 1': ['Projet 0'], 'Etudiant 2': ['Projet 1'], 'Etudiant 3': ['Projet 0'], 'Etudiant 4': ['Projet 1']}
