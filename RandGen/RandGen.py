@@ -1,6 +1,9 @@
+# %%
+import threading
 import time
 import numpy as np
 from mallows_models import mallows_kendall as mk
+from tqdm import tqdm
 from Class import *
 import ranky as rk
 
@@ -108,7 +111,7 @@ def generate_groups(
 
 def generate_wishes(groups):
     np.random.shuffle(groups)
-    wishes = []
+    wishes = {}
     for g in groups:
 
         for p in g.pref:
@@ -127,11 +130,30 @@ def generate_wishes(groups):
 
         for s in g.studs:
             s.wishes.append(p)
-            s.wishes.sorted(s.wishes, key=s.pref.index)
+            s.wishes.sort(key=list(s.pref).index)
 
-        wishes.append(p)
+        wishes[g.id] = p
 
     return wishes
+
+
+def generate_proj_pref(projects, wishes, groups):
+    pref = {}
+    rank = {}
+
+    for p in projects:
+        pref[p.id] = []
+        rank[p.id] = []
+    for g, w in wishes.items():
+        pref[w].append(g)
+        rank[w].append(groups[g].get_rank())
+    for p in projects:
+        if pref[p.id] != []:
+            pref[p.id].sort(key=rank[p.id].index, reverse=True)
+        else:
+            pref.pop(p.id)
+            rank.pop(p.id)
+    return pref
 
 
 def main(args=None):
@@ -175,15 +197,21 @@ def main(args=None):
 
     # %% Group preferences
     print(f"\nGroup preferences:")
-    t = []
+    start = time.time()
+    threads = []
+    for i in tqdm(range(len(groups)), desc="compute group preferences"):
+        # t = threading.Thread(target=g.compute_pref)
+        # print(f"thread {g.id: >2} started")
+        # t.start()
+        # threads.append(t)
+        groups[i].compute_pref()
+
+    # for t in threads:
+    #     t.join()
+    end = time.time()
+    print(f"total time: {end - start: .02f}")
     for g in groups:
-        s = time.time()
-        g.compute_pref()
-        e = time.time()
-        t.append(e - s)
-        print(f"grp: {g.id: >2} pref: {g.pref}\ntemps: {e-s: .02f}")
-    print(f"total time: {np.sum(t): .02f}")
-    print(f"average time: {np.mean(t): .02f}")
+        print(f"grp: {g.id: >2} pref: {g.pref}")
 
     # %% Group rank
     wishes = generate_wishes(groups)
@@ -193,6 +221,13 @@ def main(args=None):
     print("\nStudent wishes:")
     for s in studs:
         print(f"std: {s.id: >2} wishes: {s.wishes}")
+
+    # %% Project preferences
+    pref = generate_proj_pref(projects, wishes, groups)
+    print("\nProject preferences:")
+    print(pref)
+    # for p in pref:
+    #     print(f"proj: {p.id} pref: {pref[p]}")
 
 
 # %% Main
