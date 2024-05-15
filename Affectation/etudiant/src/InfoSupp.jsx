@@ -15,7 +15,7 @@ const InfoSupp = () => {
   const [projetNom, setProjetNom] = useState('');
   const [nomGroupe, setNomGroupe] = useState('');
   const [numeroEtudiantError, setNumeroEtudiantError] = useState([]);
-  const numerosEtudiants = ['28710401', '28710402', '28710403'];
+  const numerosEtudiants = ['28710401', '28710402', '28710403']; // exemple de liste de numeros d'etudiants valides
 
 
 

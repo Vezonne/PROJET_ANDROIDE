@@ -109,11 +109,21 @@ const ClassementEtudiant = () => {
     };
 
     const checkScores = (projet) => {
+        const nomsDifferents = new Set();
         for (const groupe of projet.groupes) {
-            if (classement[projet._id]?.[groupe._id] === '') {
+            if (!nomsDifferents.has(groupe.nom)) {
+                // Ajouter le nom du groupe à l'ensemble pour le filtrage
+                nomsDifferents.add(groupe.nom);
+            }
+        }
+
+        for (let i = 0; i < nomsDifferents.size; i++) {
+            if (classement[projet._id]?.[projet.groupes[i]._id] === '') {
                 return false; // Désactive le bouton si un score est ''
             }
         }
+
+        console.log("nomsDifferents", nomsDifferents);
         return true; // Active le bouton si tous les scores sont différents de ''
     };
 
@@ -155,14 +165,13 @@ const ClassementEtudiant = () => {
                                 {expandedProjets[projet._id] && projet.groupes.length !== 0 && (
                                     <ul className="groupes-list">
                                         {projet.groupes.map(groupe => {
-                                            
+
                                             if (groupeUnique.includes(groupe.nom)) {
                                                 return null;
                                             }
                                             else {
                                                 groupeUnique.push(groupe.nom);
                                             }
-
                                             return (
 
                                                 <li key={groupe._id}>
