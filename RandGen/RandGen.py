@@ -16,12 +16,33 @@ MIN_CHOICE_PROJ = 3
 
 
 def generate_projs(nb_proj=NB_PROJ, min_size=MIN_PROJ_SIZE, max_size=MAX_PROJ_SIZE):
+    """
+    Génère une liste de projets aléatoires.
+
+    Args:
+        nb_proj (int): Le nombre de projets à générer (par défaut: NB_PROJ).
+        min_size (int): La taille minimale d'un projet (par défaut: MIN_PROJ_SIZE).
+        max_size (int): La taille maximale d'un projet (par défaut: MAX_PROJ_SIZE).
+
+    Returns:
+        list: Une liste de projets générés aléatoirement.
+    """
     Project.set_min_max(min_size, max_size)
     projects = [Project() for _ in range(nb_proj)]
     return projects
 
 
 def generate_class(nb_class=NB_CLASS, nb_proj=NB_PROJ):
+    """
+    Génère une matrice de classe aléatoire.
+
+    Args:
+        nb_class (int): Le nombre de classes à générer. Par défaut, NB_CLASS est utilisé.
+        nb_proj (int): Le nombre de projets par classe. Par défaut, NB_PROJ est utilisé.
+
+    Returns:
+        numpy.ndarray: Une matrice de classe aléatoire de taille (nb_class, nb_proj).
+    """
     std_class = np.zeros((nb_class, nb_proj), dtype=int)
 
     for i in range(nb_class):
@@ -32,6 +53,19 @@ def generate_class(nb_class=NB_CLASS, nb_proj=NB_PROJ):
 
 
 def generate_studs_pref(classes, nb_std=NB_STD, ratio=None):
+    """
+    Génère les préférences des étudiants en fonction des classes et des ratios donnés.
+
+    Args:
+        classes (numpy.ndarray): Un tableau 2D représentant les classes et les projets disponibles.
+        nb_std (int, optional): Le nombre d'étudiants à générer. Par défaut, il est égal à NB_STD.
+        ratio (numpy.ndarray, optional): Un tableau 1D représentant les ratios de chaque classe.
+            Si non spécifié, tous les ratios sont égaux.
+
+    Returns:
+        numpy.ndarray: Un tableau 1D contenant les étudiants générés avec leurs préférences.
+
+    """
     studs_pref = np.array([])
     studs = np.zeros((nb_std), dtype=Student)
     nb_class = classes.shape[0]
@@ -63,6 +97,15 @@ def generate_studs_pref(classes, nb_std=NB_STD, ratio=None):
 
 
 def generate_stud_rank(students):
+    """
+    Génère un classement aléatoire des étudiants.
+
+    Args:
+        students (numpy.ndarray): Un tableau contenant les étudiants.
+
+    Returns:
+        None
+    """
     stud_rank = np.arange(students.shape[0])
     np.random.shuffle(stud_rank)
     for i in range(students.shape[0]):
@@ -72,6 +115,18 @@ def generate_stud_rank(students):
 def generate_groups(
     students, min_size=MIN_PROJ_SIZE, max_size=MAX_PROJ_SIZE, min_choices=MIN_CHOICE
 ):
+    """
+    Génère des groupes d'étudiants en fonction des paramètres donnés.
+
+    Args:
+        students (list): Une liste d'objets représentant les étudiants.
+        min_size (int, optional): La taille minimale d'un groupe. Par défaut, MIN_PROJ_SIZE.
+        max_size (int, optional): La taille maximale d'un groupe. Par défaut, MAX_PROJ_SIZE.
+        min_choices (int, optional): Le nombre minimum de choix de groupe pour chaque étudiant. Par défaut, MIN_CHOICE.
+
+    Returns:
+        list: Une liste d'objets représentant les groupes générés.
+    """
     groups = []
 
     for std in students:
@@ -116,6 +171,15 @@ def generate_groups(
 
 
 def generate_wishes(groups):
+    """
+    Génère les souhaits des groupes d'étudiants.
+
+    Args:
+        groups (list): Une liste de groupes d'étudiants.
+
+    Returns:
+        dict: Un dictionnaire contenant les souhaits générés pour chaque groupe.
+    """
     np.random.shuffle(groups)
     wishes = {}
     for g in groups:
@@ -144,6 +208,20 @@ def generate_wishes(groups):
 
 
 def generate_proj_pref(projects, wishes, groups):
+    """
+    Génère les préférences de projet.
+
+    Cette fonction prend en entrée une liste de projets, un dictionnaire de souhaits et un dictionnaire de groupes.
+    Elle retourne un dictionnaire contenant les préférences de chaque projet.
+
+    Args:
+        projects (list): Une liste d'objets projet.
+        wishes (dict): Un dictionnaire de souhaits où les clés sont les groupes et les valeurs sont les projets souhaités.
+        groups (dict): Un dictionnaire de groupes où les clés sont les identifiants des groupes et les valeurs sont les objets groupe.
+
+    Returns:
+        dict: Un dictionnaire contenant les préférences de chaque projet.
+    """
     pref = {}
 
     for p in projects:
@@ -162,6 +240,21 @@ def generate_proj_pref(projects, wishes, groups):
 
 
 def store_data(stds, grps, prjs, file_name="RandGen/data/data.json"):
+    """
+    Stocke les données des étudiants, des groupes et des projets dans un fichier JSON.
+
+    Args:
+        stds (list): Liste des objets étudiants.
+        grps (list): Liste des objets groupes.
+        prjs (list): Liste des objets projets.
+        file_name (str, optional): Chemin du fichier JSON de sortie. Par défaut, "RandGen/data/data.json".
+
+    Returns:
+        dict: Dictionnaire contenant les données stockées.
+
+    Raises:
+        TypeError: Si le type de données n'est pas pris en charge lors de la conversion en JSON.
+    """
     data = {}
     data["students"] = []
     data["groups"] = []

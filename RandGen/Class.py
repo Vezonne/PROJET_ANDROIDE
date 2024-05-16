@@ -3,17 +3,54 @@ import ranky as rk
 
 
 class Project:
+    """
+    Classe représentant un projet.
+
+    Attributs de classe:
+        nb_proj (int): Le nombre total de projets créés.
+        min_size (int): La taille minimale d'un projet.
+        max_size (int): La taille maximale d'un projet.
+
+    Méthodes statiques:
+        set_min_max(min: int, max: int) -> None:
+            Définit la taille minimale et maximale d'un projet.
+
+        clear_nb_project() -> None:
+            Réinitialise le nombre total de projets.
+
+    Méthodes d'instance:
+        __init__() -> None:
+            Initialise une instance de la classe Project.
+
+        __str__() -> str:
+            Renvoie une représentation sous forme de chaîne de caractères de l'objet Project.
+
+        set_pref(preferences: list) -> None:
+            Définit les préférences du projet.
+
+    """
+
     nb_proj = 0
     min_size = 0
     max_size = 0
 
     @staticmethod
     def set_min_max(min, max):
+        """
+        Définit les valeurs minimales et maximales pour la taille du projet.
+
+        Args:
+            min (int): La valeur minimale pour la taille du projet.
+            max (int): La valeur maximale pour la taille du projet.
+        """
         Project.min_size = min
         Project.max_size = max
 
     @staticmethod
     def clear_nb_project():
+        """
+        Réinitialise le nombre de projets à zéro.
+        """
         Project.nb_proj = 0
 
     def __init__(self):
@@ -29,10 +66,31 @@ class Project:
 
 
 class Student:
+    """
+    Classe représentant un étudiant.
+
+    Attributs:
+        nb_student (int): Le nombre total d'étudiants créés.
+        groups (list): Une liste des groupes auxquels l'étudiant appartient.
+        rank (int): Le rang de l'étudiant.
+        wishes (list): Une liste des souhaits de l'étudiant.
+        id (int): L'identifiant unique de l'étudiant.
+
+    Méthodes:
+        clear_nb_student(): Réinitialise le nombre total d'étudiants.
+        __init__(): Initialise un nouvel objet étudiant.
+        __str__(): Renvoie une représentation sous forme de chaîne de caractères de l'étudiant.
+        set_preference(preference): Définit les préférences de l'étudiant.
+        set_rank(rank): Définit le rang de l'étudiant.
+    """
+
     nb_student = 0
 
     @staticmethod
     def clear_nb_student():
+        """
+        Réinitialise le nombre d'étudiants à zéro.
+        """
         Student.nb_student = 0
 
     def __init__(self):
@@ -57,10 +115,34 @@ class Student:
 
 
 class Group:
+    """
+    Classe représentant un groupe d'étudiants.
+
+    Attributes:
+        nb_group (int): Le nombre total de groupes créés.
+        size (int): La taille du groupe.
+        studs (list): La liste des étudiants dans le groupe.
+        pref (list): La liste des préférences des étudiants dans le groupe.
+        score (int): Le score du groupe.
+        id (int): L'identifiant du groupe.
+
+    Methods:
+        clear_nb_group(): Réinitialise le nombre total de groupes créés.
+        __init__(group_size): Initialise un groupe avec une taille donnée.
+        __str__(): Retourne une représentation en chaîne de caractères du groupe.
+        add_student(student): Ajoute un étudiant au groupe.
+        get_rank(): Retourne la moyenne des rangs des étudiants dans le groupe.
+        compute_pref(): Calcule les préférences du groupe.
+        compute_score(): Calcule le score du groupe.
+    """
+
     nb_group = 0
 
     @staticmethod
     def clear_nb_group():
+        """
+        Réinitialise le nombre total de groupes créés.
+        """
         Group.nb_group = 0
 
     def __init__(self, group_size):
@@ -79,14 +161,29 @@ class Group:
         return str
 
     def add_student(self, student):
+        """
+        Ajoute un étudiant au groupe.
+
+        Args:
+            student (Student): L'étudiant à ajouter.
+        """
         self.studs.append(student)
         student.groups.append(self)
 
     def get_rank(self):
+        """
+        Retourne la moyenne des rangs des étudiants dans le groupe.
+
+        Returns:
+            float: La moyenne des rangs des étudiants dans le groupe.
+        """
         ranks = [s.rank for s in self.studs]
         return np.mean(ranks)
 
     def compute_pref(self):
+        """
+        Calcule les préférences du groupe.
+        """
         std_pref = np.zeros((len(self.studs[0].pref), len(self.studs)), dtype=int)
 
         for i in range(len(self.studs)):
@@ -104,6 +201,9 @@ class Group:
             self.pref.append(i_min)
 
     def compute_score(self):
+        """
+        Calcule le score du groupe.
+        """
         self.score = 0
         for s in self.studs:
             self.score += s.rank
