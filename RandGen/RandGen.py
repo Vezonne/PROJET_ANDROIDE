@@ -3,7 +3,7 @@ import time
 import numpy as np
 from mallows_models import mallows_kendall as mk
 from tqdm import tqdm
-from Class import *
+from RandGen.GenClass import *
 import json
 
 NB_PROJ = 15
@@ -287,6 +287,46 @@ def store_data(stds, grps, prjs, file_name="RandGen/data/data.json"):
         json.dump(data, f, default=default)
 
     return data
+
+
+def get_data(file_name="RandGen/data/data.json"):
+    """
+    Récupère les données à partir d'un fichier JSON et les retourne sous forme de dictionnaires.
+
+    Args:
+        file_name (str): Le chemin du fichier JSON contenant les données. Par défaut, il est défini sur "RandGen/data/data.json".
+
+    Returns:
+        tuple: Un tuple contenant trois dictionnaires. Le premier dictionnaire contient les étudiants et leurs souhaits, le deuxième dictionnaire contient les groupes et les étudiants qui y appartiennent, et le troisième dictionnaire contient les projets et les groupes qui les préfèrent.
+    """
+    with open(file_name, "r") as f:
+        data = json.load(f)
+
+    # students = {}
+    # for s in data["students"]:
+    #     students[f"{s["id"]}"] = [f"{w}" for  w in s["wishes"]]
+
+    # groups = {}
+    # for g in data["groups"]:
+    #     groups[f"{g["id"]}"] = [f"{s}" for s in g["students"]]
+
+    # projects = {}
+    # for p in data["projects"]:
+    #     projects[f"{p['id']}"] = [f"{g}" for g in p["preferences"]]
+
+    students = {}
+    for s in data["students"]:
+        students[s["id"]] = [w for w in s["wishes"]]
+
+    groups = {}
+    for g in data["groups"]:
+        groups[g["id"]] = [s for s in g["students"]]
+
+    projects = {}
+    for p in data["projects"]:
+        projects[p["id"]] = [g for g in p["preferences"]]
+
+    return students, groups, projects
 
 
 def gen_data(file_name="RandGen/data/data.json"):

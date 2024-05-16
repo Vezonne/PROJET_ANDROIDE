@@ -6,10 +6,12 @@ model = po.AbstractModel()
 
 ########## CONSTANTS ##########
 
+
 # Nombre d'étudiants affectés minimum
 k = ...
 
 ########## SETS ##########
+
 
 # Etudiants
 model.E = po.Set()
@@ -19,6 +21,7 @@ model.G = po.Set()
 model.P = po.Set()
 
 ########## PARAMETERS ##########
+
 
 # Somme du score du groupe G et de l'enseignant du projet P
 model.score = po.Param(model.P, model.G, within=po.NonNegativeReals)
