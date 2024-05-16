@@ -10,6 +10,7 @@ const ClassementEtudiant = () => {
     const [projetsClassementEnvoye, setProjetsClassementEnvoye] = useState({});
     const groupeUnique = [];
 
+    // Récupération des projets depuis l'API
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -70,6 +71,7 @@ const ClassementEtudiant = () => {
         };
     };
 
+    // Fonction pour afficher ou masquer les groupes
     const toggleProjetExpansion = projectId => {
         setExpandedProjets(prevExpandedProjets => ({
             ...prevExpandedProjets,
@@ -77,6 +79,7 @@ const ClassementEtudiant = () => {
         }));
     };
 
+    // Fonction pour afficher ou masquer les candidats
     const toggleGroupeExpansion = (projectId, groupId) => {
         setExpandedCandidats(prevExpandedCandidats => ({
             ...prevExpandedCandidats,

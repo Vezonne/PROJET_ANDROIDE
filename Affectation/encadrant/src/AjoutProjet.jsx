@@ -13,6 +13,7 @@ const AjoutProjet = () => {
     const [projetsEtendus, setProjetsEtendus] = useState({});
     const [cpt, setCpt] = useState(0);
 
+    // Récupération des projets depuis l'API
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -29,7 +30,7 @@ const AjoutProjet = () => {
 
 
 
-
+    // Fonction de soumission du formulaire
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -69,6 +70,7 @@ const AjoutProjet = () => {
         }
     };
 
+    // Fonction pour afficher ou masquer les informations supplémentaires
     const toggleInformationsSupplementaires = (projetId) => {
         setProjetsEtendus({
             ...projetsEtendus,
@@ -76,6 +78,7 @@ const AjoutProjet = () => {
         });
     };
 
+    // Fonction pour supprimer un projet appel à une requete delete
     const handleDelete = async (projetId) => {
         try {
             console.log('Suppression du projet:', projetId);

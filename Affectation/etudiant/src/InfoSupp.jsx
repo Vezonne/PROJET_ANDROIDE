@@ -15,7 +15,7 @@ const InfoSupp = () => {
   const [projetNom, setProjetNom] = useState('');
   const [nomGroupe, setNomGroupe] = useState('');
   const [numeroEtudiantError, setNumeroEtudiantError] = useState([]);
-  const numerosEtudiants = ['28710401', '28710402', '28710403']; // exemple de liste de numeros d'etudiants valides
+  const numerosEtudiants = ['28710401', '28710402', '28710403']; // exemple de liste de numeros d'etudiants qui seront acceptés
 
 
 
@@ -194,6 +194,7 @@ const InfoSupp = () => {
   }, [projetsSelectionnes, projectId]);
 
 
+  // Naviguer vers le prochain projet non soumis
   useEffect(() => {
     if (projetsSelectionnes && projetsSelectionnes.length > 0) {
       const prochainProjet = projetsSelectionnes.find(projet => !projet.submitted);

@@ -17,6 +17,7 @@ const ClassementProjets = () => {
   const [scores, setScores] = useState({});
   const [projets, setProjets] = useState([]);
 
+  // Récupérer les projets à partir de l'API
   useEffect(() => {
     const fetchData = async () => {
         try {
@@ -33,7 +34,7 @@ const ClassementProjets = () => {
 
 
 
-
+  // Récupérer les scores des projets sélectionnés à partir du localStorage
   useEffect(() => {
     const scoresLocalStorage = localStorage.getItem('scores');
     if (scoresLocalStorage) {
@@ -90,7 +91,7 @@ const ClassementProjets = () => {
   }, [count]);
 
 
-
+  // verification que au moins un projet est sélectionné pour le classement des projets
   const handleClick = () => {
     if (projetsSelectionnes.length === 0) {
       window.alert("Vous devez selectionner au moins un projet pour continuer");

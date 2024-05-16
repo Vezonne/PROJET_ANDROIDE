@@ -7,6 +7,7 @@ import ClassementProjets from './ClassementProjets';
 
 function App() {
 
+  // Router pour naviguer entre les pages
   return (
     <Router>
       <div>
