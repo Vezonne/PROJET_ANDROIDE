@@ -32,6 +32,8 @@ def main(args=None):
         for i in range(len(projects[p])):
             pref[projects[p][i]] = len(projects[p]) - i
 
+        projects[p] = pref
+
     # calcul des préférences des groupes
     grps_pref = {}
     for g in tqdm(groups.keys(), desc="Computing groups preferences"):
@@ -92,7 +94,7 @@ def main(args=None):
             return 0
 
     def get_scorePG(project, group):
-        if group in projects[project]:
+        if project in projects and group in projects[project]:
             return projects[project][group]
         else:
             return 0
@@ -144,9 +146,14 @@ def main(args=None):
     def objectif_rule(model):
         return sum(
             [
-                model.affectation_grp
-                * (get_scoreGP(g, p) * get_scorePG(p, g) / len(groups[g]))
-                for g, p in zip(model.G, model.P)
+                sum(
+                    [
+                        model.affectation_grp[g, p]
+                        * (get_scoreGP(g, p) * get_scorePG(p, g) / len(groups[g]))
+                        for p in model.P
+                    ]
+                )
+                for g in model.G
             ]
         )
 
@@ -156,7 +163,10 @@ def main(args=None):
 
     # Affectation d'au moins k étudiants à un projet
     def affectation_etu_rule(model):
-        return sum([model.affectation_etu[e, p] for e, p in zip(model.E, model.P)]) >= k
+        return (
+            sum([sum([model.affectation_etu[e, p] for p in model.P]) for e in model.E])
+            >= k
+        )
 
     model.affectation_etu_con = pyo.Constraint(rule=affectation_etu_rule)
 
@@ -174,10 +184,13 @@ def main(args=None):
 
     # Affectation d'au plus un projet à un étudiant
     def affectation_etu_prj_rule(model, g, p):
-        for e in groups[g]:
-            if model.affectation_grooup[g, p] != model.affectation_etu[e, p]:
-                return False
-        return True
+        return (
+            sum(
+                model.affectation_grp[g, p] - model.affectation_etu[e, p]
+                for e in groups[g]
+            )
+            == 0
+        )
 
     model.affectation_etu_prj_con = pyo.Constraint(
         model.G, model.P, rule=affectation_etu_prj_rule
@@ -185,6 +198,11 @@ def main(args=None):
 
     # Contrainte de stabilité
     def stabilite_rule(model, g, p):
+        print("g in p ?:")
+        if g not in projects[p]:
+            print("no")
+            return pyo.Constraint.Infeasible
+        print("yes")
         ret = 0
         for gbis in projects[p]:
             if projects[p][gbis] > projects[p][g]:
@@ -194,6 +212,7 @@ def main(args=None):
             for pbis in students[e]:
                 if students[e][pbis] > students[e][p]:
                     ret += model.affectation_etu[e, pbis]
+
         return ret >= 1
 
     model.stabilite_con = pyo.Constraint(model.G, model.P, rule=stabilite_rule)
