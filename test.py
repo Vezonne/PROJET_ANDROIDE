@@ -4,14 +4,14 @@ import numpy as np
 import ranky as rk
 import pyomo.environ as pyo
 from pyomo.opt import SolverFactory
-import pandas as pd
+import platform
 
 infinity = float("inf")
 
 
 def main(args=None):
 
-    students, groups, projects = RandGen.get_data()
+    students, groups, projects = RandGen.get_data("RandGen/data/data_test.json")
     print("students\n", students)
     print("groups\n", groups)
     print("projects\n", projects)
@@ -24,7 +24,7 @@ def main(args=None):
 
         students[s] = pref
 
-    print("students scores\n", students)
+    print("\nstudents scores\n", students)
 
     # modification des préféreneces des projets de rangs à scores
     for p in projects.keys():
@@ -33,6 +33,8 @@ def main(args=None):
             pref[projects[p][i]] = len(projects[p]) - i
 
         projects[p] = pref
+
+    print("projects scores\n", projects)
 
     # calcul des préférences des groupes
     grps_pref = {}
@@ -111,7 +113,7 @@ def main(args=None):
     ########## CONSTANTS ##########
 
     # Nombre d'étudiants affectés minimum
-    k = len(students)
+    k = 3 * len(students) / 4
 
     ########## SETS ##########
 
@@ -182,43 +184,69 @@ def main(args=None):
 
     model.affectation_prj_con = pyo.Constraint(model.P, rule=affectation_prj_rule)
 
-    # Affectation d'au plus un projet à un étudiant
-    def affectation_etu_prj_rule(model, g, p):
-        return (
-            sum(
-                model.affectation_grp[g, p] - model.affectation_etu[e, p]
-                for e in groups[g]
-            )
-            == 0
-        )
+    # # Affectation d'au plus un projet à un étudiant
+    # def affectation_etu_prj_rule(model, g, p):
+    #     return (
+    #         sum(
+    #             [
+    #                 model.affectation_grp[g, p] - model.affectation_etu[e, p]
+    #                 for e in groups[g]
+    #             ]
+    #         )
+    #         == 0
+    #     )
 
-    model.affectation_etu_prj_con = pyo.Constraint(
-        model.G, model.P, rule=affectation_etu_prj_rule
-    )
+    # model.affectation_etu_prj_con = pyo.Constraint(
+    #     model.G, model.P, rule=affectation_etu_prj_rule
+    # )
 
     # Contrainte de stabilité
     def stabilite_rule(model, g, p):
-        print("g in p ?:")
-        if g not in projects[p]:
-            print("no")
-            return pyo.Constraint.Infeasible
-        print("yes")
         ret = 0
         for gbis in projects[p]:
-            if projects[p][gbis] > projects[p][g]:
+            if get_scorePG(p, gbis) > get_scorePG(p, g):
                 ret += model.affectation_grp[gbis, p]
 
         for e in groups[g]:
             for pbis in students[e]:
-                if students[e][pbis] > students[e][p]:
+                if get_scoreEP(e, pbis) > get_scoreEP(e, p):
                     ret += model.affectation_etu[e, pbis]
 
         return ret >= 1
 
     model.stabilite_con = pyo.Constraint(model.G, model.P, rule=stabilite_rule)
 
-    solver = SolverFactory("cbc")
+    # os_name = platform.system()
+    # if os_name == "Windows":
+    #     solver = pyo.SolverFactory("cbc", executable="cbc-module/ampl.mswin64/cbc.exe")
+    # elif os_name == "Darwin":
+    #     solver = pyo.SolverFactory("cbc", executable="cbc-module/ampl.macos64/cbc")
+    # else:
+    #     solver = pyo.SolverFactory(
+    #         "cbc", executable="cbc-module/ampl.linux-intel64/cbc"
+    #     )
+
+    solver = pyo.SolverFactory("glpk")
     results = solver.solve(model)
+
+    print(results)
+
+    # print("affectation des groupes")
+    # for agrp in model.affectation_grp:
+    #     if model.affectation_grp[agrp].value == 1:
+    #         print(agrp)
+
+    # print("affectation des étudiants")
+    # for aetu in model.affectation_etu:
+    #     if model.affectation_etu[aetu] == 1:
+    #         print(aetu)
+
+    # model.affectation_grp.display()
+    # model.affectation_etu.display()
+    grp_aff = model.affectation_grp.get_values()
+    for g in grp_aff:
+        if grp_aff[g] == 1:
+            print(g)
 
 
 if __name__ == "__main__":

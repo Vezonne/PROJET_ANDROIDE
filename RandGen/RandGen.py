@@ -1,9 +1,10 @@
 # %%
+import os
 import time
 import numpy as np
 from mallows_models import mallows_kendall as mk
 from tqdm import tqdm
-from RandGen.GenClass import *
+from GenClass import *
 import json
 
 NB_PROJ = 15
@@ -11,9 +12,7 @@ NB_STD = 40
 NB_CLASS = 4
 MIN_PROJ_SIZE = 2
 MAX_PROJ_SIZE = 4
-MIN_CHOICE = 3
-MIN_CHOICE_PROJ = 3
-
+MIN_STD_WISHES = 5
 
 def generate_projs(nb_proj=NB_PROJ, min_size=MIN_PROJ_SIZE, max_size=MAX_PROJ_SIZE):
     """
@@ -113,7 +112,7 @@ def generate_stud_rank(students):
 
 
 def generate_groups(
-    students, min_size=MIN_PROJ_SIZE, max_size=MAX_PROJ_SIZE, min_choices=MIN_CHOICE
+    students, min_size=MIN_PROJ_SIZE, max_size=MAX_PROJ_SIZE, min_choices=MIN_STD_WISHES
 ):
     """
     Génère des groupes d'étudiants en fonction des paramètres donnés.
@@ -282,7 +281,9 @@ def store_data(stds, grps, prjs, file_name="RandGen/data/data.json"):
         if isinstance(o, np.int64):  # type: ignore
             return int(o)
         raise TypeError
-
+    
+    if os.path.isfile(file_name):
+        os.remove(file_name)
     with open(file_name, "x") as f:
         json.dump(data, f, default=default)
 
@@ -302,34 +303,43 @@ def get_data(file_name="RandGen/data/data.json"):
     with open(file_name, "r") as f:
         data = json.load(f)
 
-    # students = {}
-    # for s in data["students"]:
-    #     students[f"{s["id"]}"] = [f"{w}" for  w in s["wishes"]]
-
-    # groups = {}
-    # for g in data["groups"]:
-    #     groups[f"{g["id"]}"] = [f"{s}" for s in g["students"]]
-
-    # projects = {}
-    # for p in data["projects"]:
-    #     projects[f"{p['id']}"] = [f"{g}" for g in p["preferences"]]
-
     students = {}
     for s in data["students"]:
-        students[s["id"]] = [w for w in s["wishes"]]
+        students[f"{s["id"]}"] = [f"{w}" for  w in s["wishes"]]
 
     groups = {}
     for g in data["groups"]:
-        groups[g["id"]] = [s for s in g["students"]]
+        groups[f"{g["id"]}"] = [f"{s}" for s in g["students"]]
 
     projects = {}
     for p in data["projects"]:
-        projects[p["id"]] = [g for g in p["preferences"]]
+        projects[f"{p['id']}"] = [f"{g}" for g in p["preferences"]]
+
+    # students = {}
+    # for s in data["students"]:
+    #     students[s["id"]] = [w for w in s["wishes"]]
+
+    # groups = {}
+    # for g in data["groups"]:
+    #     groups[g["id"]] = [s for s in g["students"]]
+
+    # projects = {}
+    # for p in data["projects"]:
+    #     projects[p["id"]] = [g for g in p["preferences"]]
 
     return students, groups, projects
 
 
-def gen_data(file_name="RandGen/data/data.json"):
+def gen_data(
+    nb_std=NB_STD,
+    nb_proj=NB_PROJ,
+    nb_class=NB_CLASS,
+    min_proj_size=MIN_PROJ_SIZE,
+    max_pro_size=MAX_PROJ_SIZE,
+    min_std_wishes=MIN_STD_WISHES,
+    file_name="RandGen/data/data.json",
+    verbose=True,
+):
 
     Student.clear_nb_student()
     Group.clear_nb_group()
@@ -337,43 +347,48 @@ def gen_data(file_name="RandGen/data/data.json"):
 
     # %% Projects
     projects = generate_projs()
-    print("\nProjects:")
-    for p in projects:
-        print(p)
+    if verbose:
+        print("\nProjects:")
+        for p in projects:
+            print(p)
 
     # %% Classes
     classes = generate_class()
-    print("\nClasses:")
-    for c in classes:
-        print(c)
+    if verbose:
+        print("\nClasses:")
+        for c in classes:
+            print(c)
 
     # %% Students
     studs = generate_studs_pref(classes)
     std_rk = generate_stud_rank(studs)
-    print("\nStudent preferences:")
-    for s in studs:
-        # lt = []
-        # for i in range(NB_CLASS):
-        #     lt.append(mk.distance(classes[i], s.pref))
-        print(f"{s}")
+    if verbose:
+        print("\nStudent preferences:")
+        for s in studs:
+            # lt = []
+            # for i in range(NB_CLASS):
+            #     lt.append(mk.distance(classes[i], s.pref))
+            print(f"{s}")
 
     # %% Groups
     groups = generate_groups(studs)
-    print("\nGroups:")
-    for g in groups:
-        print(g)
+    if verbose:
+        print("\nGroups:")
+        for g in groups:
+            print(g)
 
-    # for s in studs:
-    #     str = f"std: {s.id: >2} grp: ["
-    #     for g in s.groups:
-    #         str += f"{g.id: >2} "
-    #     str += f"\b]"
-    #     print(str)
+        # for s in studs:
+        #     str = f"std: {s.id: >2} grp: ["
+        #     for g in s.groups:
+        #         str += f"{g.id: >2} "
+        #     str += f"\b]"
+        #     print(str)
 
-    print(f"average grps per std: {np.mean([len(s.groups) for s in studs]):.2f}")
+        print(f"average grps per std: {np.mean([len(s.groups) for s in studs]):.2f}")
 
     # %% Group preferences
-    print(f"\nGroup preferences:")
+    if verbose:
+        print(f"\nGroup preferences:")
     start = time.time()
     threads = []
     for i in tqdm(range(len(groups)), desc="compute group preferences"):
@@ -386,34 +401,38 @@ def gen_data(file_name="RandGen/data/data.json"):
     # for t in threads:
     #     t.join()
     end = time.time()
-    print(f"total time: {end - start: .02f}")
-    for g in groups:
-        print(f"grp: {g.id: >2} pref: {g.pref}")
+    if verbose:
+        print(f"total time: {end - start: .02f}")
+        for g in groups:
+            print(f"grp: {g.id: >2} pref: {g.pref}")
 
     # %% Group rank
     wishes = generate_wishes(groups)
-    print("\nWishes:")
-    print(wishes)
+    if verbose:
+        print("\nWishes:")
+        print(wishes)
 
-    print("\nStudent wishes:")
-    for s in studs:
-        print(f"std: {s.id: >2} wishes: {s.wishes}")
+        print("\nStudent wishes:")
+        for s in studs:
+            print(f"std: {s.id: >2} wishes: {s.wishes}")
 
     # %% Project preferences
     pref = generate_proj_pref(projects, wishes, groups)
-    print("\nProject preferences:")
-    # print(pref)
-    for p in projects:
-        print(f"proj: {p.id: >2} pref: {p.pref}")
+    if verbose:
+        print("\nProject preferences:")
+        # print(pref)
+        for p in projects:
+            print(f"proj: {p.id: >2} pref: {p.pref}")
 
     # %% Store data
     data = store_data(studs, groups, projects, file_name)
-    print("\nData stored in data.json")
+    if verbose:
+        print("\nData stored in {file_name}")
 
 
 def main(args=None):
 
-    for i in range(10):
+    for i in range(1):
         gen_data(file_name=f"RandGen/data/data{i}.json")
 
 
