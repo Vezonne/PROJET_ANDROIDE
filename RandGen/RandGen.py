@@ -1,4 +1,3 @@
-# %%
 import os
 import time
 import numpy as np
@@ -112,7 +111,7 @@ def generate_stud_rank(students):
 
 
 def generate_groups(
-    students, min_size=MIN_PROJ_SIZE, max_size=MAX_PROJ_SIZE, min_choices=MIN_STD_WISHES
+    students, min_size=MIN_PROJ_SIZE, max_size=MAX_PROJ_SIZE, min_wishes=MIN_STD_WISHES
 ):
     """
     Génère des groupes d'étudiants en fonction des paramètres donnés.
@@ -130,8 +129,8 @@ def generate_groups(
 
     for std in students:
 
-        while len(std.groups) < min_choices:
-            size = round(np.random.normal(3, 0.75))
+        while len(std.groups) < min_wishes:
+            size = round(np.random.normal(min_size + round((max_size - min_size)/2), 0.75)) # 0.75 = sigma peut-etre a modifier
             size = np.min([size, max_size])
             size = np.max([size, min_size])
             groups.append(Group(size))
@@ -335,32 +334,45 @@ def gen_data(
     nb_proj=NB_PROJ,
     nb_class=NB_CLASS,
     min_proj_size=MIN_PROJ_SIZE,
-    max_pro_size=MAX_PROJ_SIZE,
+    max_proj_size=MAX_PROJ_SIZE,
     min_std_wishes=MIN_STD_WISHES,
     file_name="RandGen/data/data.json",
     verbose=True,
 ):
+    """
+    Generate random data for a project.
+
+    Args:
+        nb_std (int): Number of students. Defaults to NB_STD.
+        nb_proj (int): Number of projects. Defaults to NB_PROJ.
+        nb_class (int): Number of classes. Defaults to NB_CLASS.
+        min_proj_size (int): Minimum project size. Defaults to MIN_PROJ_SIZE.
+        max_pro_size (int): Maximum project size. Defaults to MAX_PROJ_SIZE.
+        min_std_wishes (int): Minimum number of wishes per student. Defaults to MIN_STD_WISHES.
+        file_name (str): File name to store the generated data. Defaults to "RandGen/data/data.json".
+        verbose (bool): Whether to print verbose output. Defaults to True.
+    """
 
     Student.clear_nb_student()
     Group.clear_nb_group()
     Project.clear_nb_project()
 
-    # %% Projects
-    projects = generate_projs()
+    # Projects
+    projects = generate_projs(nb_proj=nb_proj, min_size=min_proj_size, max_size=max_proj_size)
     if verbose:
         print("\nProjects:")
         for p in projects:
             print(p)
 
-    # %% Classes
-    classes = generate_class()
+    # Classes
+    classes = generate_class(nb_proj=nb_proj, nb_class=nb_class)
     if verbose:
         print("\nClasses:")
         for c in classes:
             print(c)
 
-    # %% Students
-    studs = generate_studs_pref(classes)
+    # Students
+    studs = generate_studs_pref(classes, nb_std=nb_std)
     std_rk = generate_stud_rank(studs)
     if verbose:
         print("\nStudent preferences:")
@@ -370,8 +382,8 @@ def gen_data(
             #     lt.append(mk.distance(classes[i], s.pref))
             print(f"{s}")
 
-    # %% Groups
-    groups = generate_groups(studs)
+    # Groups
+    groups = generate_groups(studs, min_size=min_proj_size, max_size=max_proj_size, min_wishes=min_std_wishes)
     if verbose:
         print("\nGroups:")
         for g in groups:
@@ -386,7 +398,7 @@ def gen_data(
 
         print(f"average grps per std: {np.mean([len(s.groups) for s in studs]):.2f}")
 
-    # %% Group preferences
+    # Group preferences
     if verbose:
         print(f"\nGroup preferences:")
     start = time.time()
@@ -406,7 +418,7 @@ def gen_data(
         for g in groups:
             print(f"grp: {g.id: >2} pref: {g.pref}")
 
-    # %% Group rank
+    # Group rank
     wishes = generate_wishes(groups)
     if verbose:
         print("\nWishes:")
@@ -416,7 +428,7 @@ def gen_data(
         for s in studs:
             print(f"std: {s.id: >2} wishes: {s.wishes}")
 
-    # %% Project preferences
+    # Project preferences
     pref = generate_proj_pref(projects, wishes, groups)
     if verbose:
         print("\nProject preferences:")
@@ -424,7 +436,7 @@ def gen_data(
         for p in projects:
             print(f"proj: {p.id: >2} pref: {p.pref}")
 
-    # %% Store data
+    # Store data
     data = store_data(studs, groups, projects, file_name)
     if verbose:
         print("\nData stored in {file_name}")
@@ -436,8 +448,8 @@ def main(args=None):
         gen_data(file_name=f"RandGen/data/data{i}.json")
 
 
-# %% Main
+# Main
 if __name__ == "__main__":
     main()
 
-# %%
+

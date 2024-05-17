@@ -1,0 +1,16 @@
+# Consignes pour exécuter le code du générateur de données
+
+Pour une éxécution simple, il suffit de lancer le fichier RandGen.py.
+Pour une éxécution plus complète, il faut modifier les paramètres dans le main.
+Changer les parametres suivants dans le main pour générer des données.
+
+nb_std=NB_STD,
+nb_proj=NB_PROJ,
+nb_class=NB_CLASS,
+min_proj_size=MIN_PROJ_SIZE,
+max_proj_size=MAX_PROJ_SIZE,
+min_std_wishes=MIN_STD_WISHES,
+file_name="RandGen/data/data.json"
+
+Pour une utilisation dans Solveur.py modifierla ligne 6:
+from GenClass import * -> from RandGen.GenClass import *

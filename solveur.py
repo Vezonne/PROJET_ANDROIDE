@@ -1,86 +1,219 @@
-import pyomo.environ as po
+from tqdm import tqdm
+from RandGen import RandGen
+import numpy as np
+import ranky as rk
+import pyomo.environ as pyo
+from pyomo.opt import SolverFactory
+import platform
 
 infinity = float("inf")
 
-model = po.AbstractModel()
 
-########## CONSTANTS ##########
+def main(args=None):
+
+    # -------A COMPLETER PAR L'UTILISATEUR----------
+    # Chemin du fichier json
+    file_name = "RandGen/data/data_test.json"
+
+    students, groups, projects = RandGen.get_data(file_name)
+    print("students\n", students)
+    print("groups\n", groups)
+    print("projects\n", projects)
+
+    # -------A COMPLETER PAR L'UTILISATEUR----------
+    # Nombre d'étudiants affectés minimum
+    k = 3 * len(students) / 4
+
+    # modification des préféreneces des étudiants de rangs à scores
+    for s in students.keys():
+        pref = {}
+        for i in range(len(students[s])):
+            pref[students[s][i]] = len(students[s]) - i
+
+        students[s] = pref
+
+    print("\nstudents scores\n", students)
+
+    # modification des préféreneces des projets de rangs à scores
+    for p in projects.keys():
+        pref = {}
+        for i in range(len(projects[p])):
+            pref[projects[p][i]] = len(projects[p]) - i
+
+        projects[p] = pref
+
+    print("projects scores\n", projects)
+
+    # calcul des préférences des groupes
+    grps_pref = {}
+    for g in tqdm(groups.keys(), desc="Computing groups preferences"):
+        projs = set()
+
+        for s in groups[g]:
+            projs = projs.union(set(students[s]))
+
+        std_score = np.zeros((len(projs), len(groups[g])), dtype=int)
+
+        y_label = []
+        y_pos = []
+        for i, p in enumerate(projs):
+            y_label.append(p)
+            y_pos.append(i)
+
+        x_label = []
+        x_pos = []
+        for i, s in enumerate(groups[g]):
+            x_label.append(s)
+            x_pos.append(i)
+
+        for s, i in zip(x_label, x_pos):
+
+            for p, scr in students[s].items():
+                std_score[y_pos[y_label.index(p)]][i] = scr
+
+        # print("\nStudents score for group", g)
+        # print("x labels ", x_label)
+        # print("y labels ", y_label)
+        # i = 0
+        # for p in std_score:
+        #     str = f"proj: {y_label[i]: >2} ["
+        #     for s in p:
+        #         str += f"{s: >2} "
+        #     str += f"\b]"
+        #     i += 1
+        #     print(str)
+
+        pref_scores = rk.center(std_score, method="kendalltau", verbose=False)
+
+        grp_pref = {}
+        for y in range(len(pref_scores)):
+            grp_pref[y_label[y]] = pref_scores[y]
+
+        grps_pref[g] = grp_pref
+
+    def get_scoreGP(group, project):
+        if project in grps_pref[group]:
+            return grps_pref[group][project]
+        else:
+            return 0
+
+    def get_scorePG(project, group):
+        if project in projects and group in projects[project]:
+            return projects[project][group]
+        else:
+            return 0
+
+    def get_scoreEP(student, project):
+        if project in students[student]:
+            return students[student][project]
+        else:
+            return 0
+
+    # modélisation problème linéaire
+    model = pyo.ConcreteModel()
+
+    ########## SETS ##########
+
+    # Etudiants
+    model.E = pyo.Set(initialize=(s for s in students))
+    # Groupes
+    model.G = pyo.Set(initialize=(g for g in groups))
+    # Projets
+    model.P = pyo.Set(initialize=(p for p in projects))
+
+    ########## VARIABLES ##########
+
+    # Affectation des étudiants à des projets
+    model.affectation_etu = pyo.Var(model.E, model.P, domain=pyo.Binary)
+    # Affectation des groupes à des projets
+    model.affectation_grp = pyo.Var(model.G, model.P, domain=pyo.Binary)
+
+    ########## OBJECTIF ##########
+
+    # Maximiser la somme de tous les scores
+    def objectif_rule(model):
+        return sum(
+            [
+                sum(
+                    [
+                        model.affectation_grp[g, p]
+                        * (get_scoreGP(g, p) * get_scorePG(p, g) / len(groups[g]))
+                        for p in model.P
+                    ]
+                )
+                for g in model.G
+            ]
+        )
+
+    model.obj = pyo.Objective(rule=objectif_rule, sense=pyo.maximize)
+
+    ########## CONSTRAINTS ##########
+
+    # Affectation d'au moins k étudiants à un projet
+    def affectation_etu_rule(model):
+        return (
+            sum([sum([model.affectation_etu[e, p] for p in model.P]) for e in model.E])
+            >= k
+        )
+
+    model.affectation_etu_con = pyo.Constraint(rule=affectation_etu_rule)
+
+    # Affectation d'au plus un projet à un groupe
+    def affectation_grp_rule(model, g):
+        return sum(model.affectation_grp[g, p] for p in model.P) <= 1
+
+    model.affectation_grp_con = pyo.Constraint(model.G, rule=affectation_grp_rule)
+
+    # Affectation d'au plus un groupe à un projet
+    def affectation_prj_rule(model, p):
+        return sum(model.affectation_grp[g, p] for g in model.G) <= 1
+
+    model.affectation_prj_con = pyo.Constraint(model.P, rule=affectation_prj_rule)
+
+    # # Affectation d'au plus un projet à un étudiant
+    # def affectation_etu_prj_rule(model, g, p):
+    #     return (
+    #         sum(
+    #             [
+    #                 model.affectation_grp[g, p] - model.affectation_etu[e, p]
+    #                 for e in groups[g]
+    #             ]
+    #         )
+    #         == 0
+    #     )
+
+    # model.affectation_etu_prj_con = pyo.Constraint(
+    #     model.G, model.P, rule=affectation_etu_prj_rule
+    # )
+
+    # Contrainte de stabilité
+    def stabilite_rule(model, g, p):
+        ret = 0
+        for gbis in projects[p]:
+            if get_scorePG(p, gbis) > get_scorePG(p, g):
+                ret += model.affectation_grp[gbis, p]
+
+        for e in groups[g]:
+            for pbis in students[e]:
+                if get_scoreEP(e, pbis) > get_scoreEP(e, p):
+                    ret += model.affectation_etu[e, pbis]
+
+        return ret >= 1
+
+    model.stabilite_con = pyo.Constraint(model.G, model.P, rule=stabilite_rule)
+
+    solver = pyo.SolverFactory("glpk")
+    results = solver.solve(model)
+
+    print(results)
+
+    # model.affectation_grp.display()
+    # model.affectation_etu.display()
+    grp_aff = model.affectation_grp.get_values()
+    for g in grp_aff:
+        if grp_aff[g] == 1:
+            print(g)
 
 
-# Nombre d'étudiants affectés minimum
-k = ...
-
-########## SETS ##########
-
-
-# Etudiants
-model.E = po.Set()
-# Groupes
-model.G = po.Set()
-# Projets
-model.P = po.Set()
-
-########## PARAMETERS ##########
-
-
-# Somme du score du groupe G et de l'enseignant du projet P
-model.score = po.Param(model.P, model.G, within=po.NonNegativeReals)
-# Appartenance d'un étudiant à un groupe
-model.appartenance = po.Param(model.E, model.G, within=po.Binary)
-# Nombre d'étudiants dans un groupe
-model.nb_etu = po.Param(model.G, within=po.NonNegativeIntegers)
-# Candidature d'un groupe à un projet
-model.candidature = po.Param(model.G, model.P, within=po.Binary)
-
-########## VARIABLES ##########
-
-# Affectation des étudiants à des projets
-model.affectation_etu = po.Var(model.E, model.P, within=po.Binary)
-# Affectation des groupes à des projets
-model.affectation_grp = po.Var(model.G, model.P, within=po.Binary)
-
-########## OBJECTIF ##########
-
-
-# Maximiser la somme de tous les scores
-def objectif_rule(model):
-    return sum(
-        [
-            model.score[p, g] * model.affectation_grp[g, p]
-            for g in [model.G for p in model.P]
-        ]
-    )
-
-
-model.obj = po.Objective(rule=objectif_rule, sense=po.maximize)
-
-########## CONSTRAINTS ##########
-
-
-# Affectation d'au moins k étudiants à un projet
-def affectation_etu_rule(model):
-    return sum([model.affectation_etu[e, p] for e in [model.E for p in model.P]]) >= k
-
-
-model.affectation_etu_con = po.Constraint(rule=affectation_etu_rule)
-
-
-# Affectation d'au plus un projet à un groupe
-def affectation_grp_rule(model, g):
-    return sum(model.affectation_grp[g, p] for p in model.P) <= 1
-
-
-model.affectation_grp_con = po.Constraint(model.G, rule=affectation_grp_rule)
-
-
-# Affectation d'au plus un groupe à un projet
-def affectation_prj_rule(model, p):
-    return sum(model.affectation_grp[g, p] for g in model.G) <= 1
-
-
-model.affectation_prj_con = po.Constraint(model.P, rule=affectation_prj_rule)
-
-
-# Affectation d'au plus un projet à un étudiant
-def affectation_etu_prj_rule(model, e, p):
-    return model.affectation_grooup[g, p] == model.affectation_etu[e, p]
+if __name__ == "__main__":
+    main()
