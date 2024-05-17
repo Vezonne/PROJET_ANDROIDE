@@ -1,0 +1,42 @@
+# Guide d'installation et de lancement du backend avec Create React App
+
+Ce guide vous aidera à mettre en place et à lancer le backend de votre application créé avec "npx create react app".
+
+## Prérequis
+Assurez-vous d'avoir Node.js, express.js et npm (Node Package Manager) installés sur votre machine. Vous pouvez les installer en suivant les instructions sur le site officiel de Node.js.
+
+## Étapes pour l'installation : 
+
+
+### Copier le code
+git clone <lien_vers_le_dépôt>
+ou téléchargez directement les fichiers compressés depuis le dépôt.
+
+### Accéder au répertoire du projet
+
+
+### Installer les dépendances
+
+```bash
+npm install
+```
+Cette commande installera toutes les dépendances nécessaires pour le backend.
+
+### Lancement du serveur
+Une fois les dépendances installées, vous pouvez lancer le serveur en exécutant la commande suivante :
+
+```bash
+npm start
+```
+Cela démarrera le serveur de développement. Vous pourrez alors accéder à votre application depuis votre navigateur à l'adresse http://localhost:3000.
+
+### Configuration supplémentaire
+Si nécessaire, vous pouvez également modifier le port d'ecoute dans le fichier /config/.env qui contient les variables globales comme le port d'ecoute du serveur (5000 de base).
+
+### Il faut egalement installer mongoDB compass qui permettra d'acceder à la base de données
+
+les informations sont sur le site suivant : 
+
+https://www.mongodb.com/fr-fr
+
+
